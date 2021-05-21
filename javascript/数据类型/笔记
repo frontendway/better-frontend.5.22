@@ -1,0 +1,24 @@
+in 运算符
+  for in 遍历当前对象以及对象原型链上可枚举属性
+  if (!('a' in window)) {
+    var a = 1
+  }
+  console.log(a)
+  ->  undefined
+      变量提升阶段全局申明了 a = undefined、即便值是 undefined
+      a 也是 window 的属性 a in window 是 true
+
+二进制转十进制
+  1101
+  从右往左 1*20 + 0*21 + 1*22 + 1*23
+十进制转二进制
+  255/2 = 127 余1
+  127/2 = 63  余1
+  结果从下往上排列
+
+位运算符
+
+Reflect
+  defineProperty
+    返回值是布尔值
+  

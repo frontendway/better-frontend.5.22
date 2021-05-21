@@ -1,0 +1,84 @@
+
+redis数据类型
+  string 字符串
+  hash 对象
+  列表 数组
+  set 无序集合
+  set 有序集合
+
+Client
+  删除所有
+    flushall
+  string
+    查看所有key
+      key *
+    设置值
+      set a 1
+      get a
+    自增、自减
+      incr a
+      decr a
+    删除
+      del a
+    获取字符串部分
+      getrange name 0 1
+    设置过期时间/s
+      expire name 5
+    查看剩余过期时间
+      ttl name
+  hash
+    设置
+      hset person name zfpx
+      hget person name
+      hmget person name age
+      hgetall person
+    删除
+      hdel person name
+  列表
+    设置
+      lpush arr 1 2 3 4
+      rpush arr 1 2 3 4
+    获取
+      lrange arr 0 -1
+      lindex arr 1
+    删除
+      lpop arr
+      rpop arr
+      lrem arr 7 1
+        删除数组中7个元素中是1的元素
+  无序set
+    设置
+      sadd myset 1
+    查看
+      smembers myset
+    删除
+      del myset
+      srem myset 1
+        删除 1 这个元素
+    合并 2 个set
+      sunion myset1 myset2
+    取交集
+      sinter myset1 myset2
+    取差集
+      sdiff myset1 myset2
+  有序set
+    zadd 
+    zrange
+
+node中使用redis
+  npm i redis --save
+  const session = require('express-session')
+  const redis = require('redis')
+  const redisClient = redis.createClient()
+  const Redis = require('connect-redis')(session)
+  app.use(session({
+    store: new Redis({
+      host: '127.0.0.1',
+      port: 6379,
+      client: redisClient
+    }),
+    saveUninitialized: true,
+    resave: false,
+    secret: 'zm'
+  }))
+  redisClient.set('key', 'value')

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+</head>
+<body>
+	<script type="text/javascript">
+		function isLeapYear() {
+			/* 判断是否闰年 闰年366天 */
+			const year = new Date().getFullYear();
+			if (year % 400 == 0 || (year % 4 == 0 && year % 100 !== 0)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		function getPix() {
+			/* 过去天数与今年总天数比例 */
+			let allDays =isLeapYear() ? 366 : 365;
+			return parseInt(days / allDays * 100);
+		}
+		function days() {
+			/* 今年已过去多少天 */
+			let start = new Date();
+			start.setMonth(0);
+			start.setDate(1);
+			let timestamp = new Date().getTime() - start.getTime();
+			return parseInt(timestamp / 1000 / 60 / 60 / 24) + 1;
+		}
+	</script>
+</body>
+</html>

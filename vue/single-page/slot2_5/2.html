@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+	<div id="app">
+		<item>
+			<template slot-scope="scope">
+				<div>{{scope.row.name}}</div>
+			</template>
+		</item>
+
+	</div>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script type="text/javascript">
+		Vue.component('item', {
+			data: function () {
+				return {
+					texts: {name: 'elel'}
+				}
+			},
+			template: '<div><slot :row="texts"></slot></div>'
+		})
+
+		new Vue({
+			el: '#app'
+		})
+
+	</script>
+</body>
+</html>

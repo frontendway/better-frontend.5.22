@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style type="text/css">
+		body{margin: 0px;}
+		li{list-style-type: none;}
+		div{font-size: 60px;height: 600px;}
+		div:nth-of-type(1){background: #ccc;}
+		div:nth-of-type(2){background: red;}
+		div:nth-of-type(3){background: green;}
+		div:nth-of-type(4){background: pink;}
+		div:nth-of-type(5){background: blue;}
+		div:nth-of-type(6){background: #666;}
+		.fix{position: fixed;right: 0px;top: 200px;}
+		.fix li{width: 50px;height: 50px;background: #999;border-radius: 50%;}
+		.fix .active{background: yellow;}
+	</style>
+</head>
+<body>
+	<div>1</div>
+	<div>2</div>
+	<div>3</div>
+	<div>4</div>
+	<div>5</div>
+	<div>6</div>
+	<ul class="fix">
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+	</ul>
+</body>
+</html>
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$divs=$('div');
+	$lis=$('li');
+	$(window).on('scroll',function(){
+		$maxTop=$(document).scrollTop()+$(window).height()/2;
+		$divs.each(function(i,item){
+			if($maxTop>=$(item).offset().top && $maxTop<($(item).offset().top+$(item).height())){
+				$lis.eq(i).addClass('active').siblings().removeClass('active');
+			}
+		});
+	});
+</script>

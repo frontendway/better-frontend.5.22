@@ -1,0 +1,9 @@
+null 与 undefined 区别
+  共同点
+    都属于基本数据类型
+    转 boolean 都是 false
+  区别
+    undefined
+      未赋值变量的初始值、函数的默认返回值、对象中不存在属性的值
+    null 
+      已明确分配了变量的值

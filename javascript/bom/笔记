@@ -1,0 +1,41 @@
+URL
+  https://blog.csdn.net/magic_xiang/article/details/84024493?age=20#123
+  window.location.href      完整路径
+  window.location.pathname  /magic_xiang/article/details/84024493
+  window.location.protocol  https
+  window.location.search    ?age=20
+  window.location.hash      #123
+
+查询字符串
+  var urlParams = new URLSearchParams('?a=1&b=2')
+  urlParams.has('a')
+  urlParams.get('a')
+  urlParams.getAll('a') 返回值数组
+  urlParams.toString()
+获取查询字符串 value 值
+  function query (name) {
+    const search = window.location.search.slice(1)
+    const reg = new RegExp(`(^|&)${name}=([^&]*)`, 'i')
+    const res = search.match(reg)
+    return res ? res[2] : ''
+  }
+
+hash
+  window.onhashchange 监听 hash 变化
+history
+  新增
+    history.pushState(stateObject, title, URL)
+  替换
+    history.replaceState(stateObject, title, URL)
+  监听前进后退
+    window.addEventListener('popstate', ev => {
+      ev.state 就是 pushState(stateObject) 中的 stateObject
+    })
+两种模式对比
+  Hash
+    只可以更改 # 后面的内
+    模式无需后端配置、并且兼容性好
+    容www.test.com/#/ 无论 hash 值如何变化、服务的接受到的 URL 永远是 www.test.com
+  History
+    可设置任意的同源 URL
+    可添加任意类型的数据到历史记录中

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    *{
+      margin: 0px;
+      padding: 0px;
+    }
+    html,body,#box{
+      height: 100%;
+    }
+    #box{
+      width: 300px;
+      margin: 0px auto;
+    }
+    .top,.bottom{
+      height: 100px;
+      background: red;
+    }
+    .center{
+      height: calc(100% - 200px);
+    }
+  </style>
+</head>
+<body>
+  <div id="box">
+    <div class="top">top</div>
+    <div class="center">center</div>
+    <div class="bottom">bottom</div>
+  </div>
+</body>
+</html>
+<!-- 
+  有点：方便高效
+  确定：兼容性不好
+-->

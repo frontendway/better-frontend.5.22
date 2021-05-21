@@ -1,0 +1,10 @@
+{
+  "presets": [
+    ["@babel/preset-env", {
+      "useBuiltIns": "usage", 
+      "corejs": 2
+    }]
+  ]
+}
+
+// useBuiltIns 项目中用到的低版本 api babel-polyfill 才会去做垫片

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style type="text/css">
+		.dialog{width: 200px;border: 1px solid red;display: none;}
+		.dialog .header{height: 60px;}
+
+	</style>
+</head>
+<body>
+	<div id="div1" class="dialog">
+		<!-- <div class="header">
+			<h2>标题</h2>
+			<i>X</i>
+		</div>
+		<div class="content">
+			内容
+		</div>
+		<div class="foot">
+			<button>OK</button>
+			<button>cancel</button>
+		</div> -->
+	</div>
+</body>
+</html>
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
+	(function($){
+
+		function fn(options){
+			var def={
+				title:'标题',
+				content:'主体内容'
+			};
+			var set={};
+			var set=$.extend(set,def,options);
+			var $parent=this;
+
+			function create(){
+				$html=$('<div class="header"><h2>'+set.title+'</h2><i>X</i></div><div class="content">'+set.content+'</div><div class="foot"><button>OK</button><button>cancel</button></div>');
+				$parent.append($html);
+			}
+
+			function bind(){
+				$(set.handler).on(set.event,function(){
+					$parent.show();
+				});
+			}
+			create();
+			bind();
+			
+		}
+
+		$.fn.extend({
+			dialog:fn
+		});
+
+	})(jQuery);
+
+	$('#div1').dialog({
+		handler:document,
+		event:'click'
+	});
+
+</script>

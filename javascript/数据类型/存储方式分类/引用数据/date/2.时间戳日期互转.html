@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+
+</body>
+<script type="text/javascript">
+	var zm = {};
+	/* 时间戳转日期 */
+	zm.timestampToDate = function (timestamp) {
+		var oDate = new Date(timestamp);
+		var year = oDate.getFullYear();
+		var month = oDate.getMonth() + 1;
+		var odate = oDate.getDate();
+		var hour = oDate.getHours();
+		var min = oDate.getMinutes();
+		var sec = oDate.getSeconds();
+		return year + '年' + month + '月' + odate + '日' + hour + ':' + min + ':' + sec;
+	}
+	/* 
+		时间对象转时间戳
+		dateStr '2014-04-23 18:55:49:123'
+	*/
+	zm.oDateToTimestamp = function (dateStr) {
+		return new Date(dateStr).getTime();
+	}
+
+</script>
+
+</html>

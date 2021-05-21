@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style type="text/css">
+		*{margin: 0px;padding: 0px;}
+		#wrap{width: 500px;margin: 100px auto 0px;border: 1px solid red;}
+		li{list-style-type: none;}
+		.order strong{}
+		.order span{padding: 2px;border: 1px solid red;display: inline-block;cursor: pointer;margin-right: 10px;}
+		.order span i{padding: 4px;background: #ccc;color: #fff;display: inline-block;}
+		.list li{height: 50px;line-height: 50px;}
+		.list span{color: #666;margin-right: 10px;}
+		a{text-decoration: none;margin: 0px 5px;color: #333;}
+		.active{color: blue;font-weight: bold;}
+	</style>
+</head>
+<body>
+	<div id="wrap">
+		<div class="order" id="order">
+			<strong>您的选择：</strong>
+			<!-- <span>锤子<i>X</i></span> -->
+		</div>
+		<ul class="list" id="list">
+		</ul>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+	var data = [
+		{
+			"title": "品牌",
+			"data": [ "苹果","小米","锤子","魅族","华为","三星","OPPO","vivo","乐视"]
+		},
+		{
+			"title": "尺寸",
+			"data": ["4.0-4.5英寸","4.6-4.9英寸","5.0-5.5英寸","6.0英寸以上"]
+		},
+		{
+			"title": "系统",
+			"data": ["android","ios","window phone","无","其他"]
+		},
+		{
+			"title": "网络",
+			"data": ["联通3G","双卡单4G","双卡双4G","联通4G"]
+		}
+	];
+
+	var zm={};
+
+	zm.init=function() {
+		var This=this;
+		This.createDom();
+		This.checkShop();
+		/* 选中的商品放入此数组 */
+		This.checkData=[];
+	}
+	/* 根据数据创建元素 */
+	zm.createDom=function() {
+		this.oUl=document.getElementById('list');
+		for(var i=0;i<data.length;i++) {
+			var cli=document.createElement('li');
+			cli.index=i;
+			var cSpan=document.createElement('span');
+			cSpan.innerText=data[i].title;
+			cli.appendChild(cSpan);
+			for(var j=0;j<data[i].data.length;j++) {
+				var a=document.createElement('a');
+				a.href='javascript:;';
+				a.innerText=data[i].data[j];
+				cli.appendChild(a);
+			}
+			this.oUl.appendChild(cli);
+		}
+		this.lis=this.oUl.getElementsByTagName('li');
+	}
+	/* 绑定点击事件选择商品 */
+	zm.checkShop=function() {
+		var This=this;
+		var as=This.oUl.getElementsByTagName('a');
+		for(var i=0;i<as.length;i++) {
+			as[i].onclick=function() {
+				var li=this.parentNode;
+				This.checkData[li.index]=this.innerText;
+				if(li.prev) {
+					li.prev.classList.remove('active');
+				}
+				this.classList.add('active');
+				This.renderCheck();
+				if(This.checkData.length) {
+					This.removeCheck();
+				}
+				li.prev=this;
+			}
+		}
+	}
+	/* 渲染当前选中列表 */
+	zm.renderCheck=function() {
+		var This=this;
+		var order=document.getElementById('order');
+		order.innerHTML='';
+		var str='';
+		for(var i=0;i<This.checkData.length;i++) {
+			if(This.checkData[i]) {
+				str+='<span>'+This.checkData[i]+'<i index="'+i+'">X</i></span>';
+			}
+		}
+		order.innerHTML=str;
+	}
+	/* 点击删除选中商品 */
+	zm.removeCheck=function() {
+		var This=this;
+		var order=document.getElementById('order');
+		var is=order.getElementsByTagName('i');
+		for(var i=0;i<is.length;i++) {
+			is[i].onclick=function() {
+				var index=this.getAttribute('index');
+				delete This.checkData[index];
+				This.lis[index].prev.classList.remove('active');
+				this.parentNode.remove();
+			}
+		}
+	}
+
+	zm.init();
+
+
+
+</script>

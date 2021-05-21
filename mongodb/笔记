@@ -1,0 +1,93 @@
+
+什么是MongoDB
+  是一个基于分布式文件存储的开源数据库系统、将数据存储为文档、其结构由key=>value、类似于JSON
+
+关系
+  Mongodb 数据库 -> 集合 -> 文档
+  Mysql   数据库 -> 表   -> 每行记录
+
+启动
+  mongod --dbpath=文件夹地址 --port=27028
+
+Client
+  查看所有数据库
+    show dbs 不会显示空集合数据库
+  新建数据库
+    use school
+  查看当前数据库
+    db
+  创建集合
+    db.createCollection('user')
+  删除集合
+    db.user.drop()
+  显示当前库集合
+    show collections
+  新增
+     db.user.insert({name:'zfpx'})
+     db.user.insert({_id: 1,name: 'zfpx'})
+     如无user集合默认创建
+     默认创建唯一_id、如果新增数据有_id、则覆盖默认的唯一_id
+  查询
+    db.user.find()
+      查询所有
+    db.user.find({age: {$in[10, 15]}})
+      查询age是10 或 15的记录
+    db.user.find({age: {$nin[10, 15]}})
+      查询age不是10 或 15的记录
+    db.user.find({age: {$lt: 17, $gt: 13})
+      查询age 大于13 小于17(不包括17)
+    db.user.find({age: {$lte: 17, $gt: 13})
+      查询age 大于13 小于等于17
+    db.user.find({age: {$not: {$lt: 17, $gt: 13}})
+      查询不在此区间
+    db.user.find({age: {$not: {$lt: 17, $gt: 13}}, {name: 1})
+      查询结果只返回name数据
+    db.user.find({hobby: 1})
+      查询数组中存在1则匹配
+    db.user.find({hobby: [1, 2]})
+      查询数组值是[1, 2]则匹配
+    db.user.find({hobby: {$all: [1, 2]}})
+      查询数组同时存在 1 2 则匹配
+    db.user.find({hobby: {$in: [1, 2]}})
+      数组中存在1 或 2 则匹配
+    db.user.find().limit(5).skip(5)
+      跳过前5条数据的结果集查询5条数据
+  更新
+    db.user.update({name:'zfpx'},{age: 9})
+      将{name:'zfpx'} 替换为 {age: 9}、默认更新1条
+    db.user.update({name:'zfpx'},{age: 9}, {multi: true})
+      更新所有
+    db.user.update({name: 'zfpx'}, {$set: {age: 9}}, {multi: true})
+      原有数据新增 {age: 9}
+    db.user.update({name: 'zfpx'}, {$unset: {age: 9}}, {multi: true})
+      原有数据删除 {age: 9}
+    db.user.update({}, {$inc: {age: 5}})
+      age自增5、如无age字段默认为5
+    db.user.update({_id: 1}, {$set: {hobby: ['a', 'b', 'c']}})
+      新增数组
+    db.user.update({_id: 1}, {$set: {'hobby.0': 'sleep'}})      
+      修改数组
+    db.user.update({_id: 1}, {$push: {'hobby': 'play'}})
+      追加数组
+    db.user.update({_id: 1}, {$pop: {'hobby': 1}})
+    db.user.update({_id: 1, hobby: {$ne: 123}}, {$push: {hobby: 123}})
+      数组中无123时、才新增123值
+    db.user.update({_id: 1}, {$addToSet: {hobby: 123}})
+      数组新增时自动去重123
+    db.user.update({_id: 1}, {$set: {name: 'zfpx'}}, {upsert: true})
+      如未查询到_id: 1记录则新增
+  删除
+    db.user.remove({age: 1}, {justOne: true})
+      {justOne: true} 删除一条
+  备份
+    mongodump --db school --collection user --out ./backup
+  恢复
+    mongorestore ./backup
+  权限
+    创建用户
+      use admin
+      db.system.users.find() 查询所有用户
+      db.createUser({user: 'zm', pwd: '123456', roles: [{role: 'readWrite', db: 'school'}]})
+      启动Mongodb mongod --dbpath --auth
+      客户端登录 mongo -u zm -p 123456 127.0.0.1/admin
+      

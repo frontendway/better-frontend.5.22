@@ -1,0 +1,5 @@
+函数申明
+  function fn () {}
+函数表达式
+  var fn = function () {}
+  

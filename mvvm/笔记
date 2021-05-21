@@ -1,0 +1,18 @@
+如何理解 mvvm
+  mvvm 算是 mvc 的一个微创新
+  mvc
+    m 是数据、v 是视图、c 是控制器
+    使用控制器更新模型、视图从模型中获取数据去渲染
+  mvvm
+    v 指视图
+    m 可以理解为服务端的某块业务逻辑操作
+    vm 即框架本身 vue react 扮演的就是 vm 这个角色、是 v 与 m 之间的核心枢纽
+
+mvvm 三要素
+  数据响应式
+  模板引擎
+  渲染
+
+Object.defineProperty 与 Reflect.defineProperty 的区别
+  Object.defineProperty 返回修改后的新对象
+  Reflect.defineProperty 返回的是布尔值

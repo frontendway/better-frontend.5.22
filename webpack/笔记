@@ -1,0 +1,175 @@
+chunk
+  每个文件对应的 id 值
+
+output
+  filename
+    入口文件打包后的文件名
+  chunkFileName
+    入口文件中依赖的 js 文件名配置项
+
+sourceMap
+  source-map
+    有 source-map 则生成 .map 映射文件
+  inline
+    有 inline sourcemap 文件打包进入业务代码中、否则反之
+  cheap
+    无 cheap 开头报错精确到哪一行那一列、无则反之
+    只负责业务代码报错映射、不映射第三方 JS 与 loader
+  cheap-module-source-map
+    有 module 则映射业务代码、loader 与第三方 js 错误映射
+  eval
+    效率最高但负责业务代码报错可能不全面
+  推荐
+    开发
+      cheap-module-eval-source-map
+    上线
+      cheap-module-source-map
+
+devServer
+  proxy: {
+    "/koocv": {
+      "target": "https://www.koocv.com",
+      "changeOrigin": true,
+      "secure": true,
+      "pathRewrite": {
+        "^/koocv": ""
+      },
+      "cookieDomainRewrite": "https://www.koocv.com"
+    }
+  }
+  changeOrigin
+    true
+      开启代理服务器、务此代理服器会去请求接口数据后把数据返回
+    false
+      只是做接口地址替换、不会开启代理服务器、仍然会有跨域问题
+  secure
+    true 
+      https地址是否做证书校验
+  pathRewrite
+    会把target的地址连接上/koocv、请求地址成为https://www.koocv.com/koocv
+    为了去除 koocv 则需要替换成 ''
+  cookieDomainRewrite
+    允许后端写入 cookie
+
+transform-runtime
+  "plugins": [
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "absoluteRuntime": false,
+        "corejs": 2, // 此处不配置则不会打包高版本降级 api
+
+tree-shaking
+  生产环境默认配好、无须再配置
+  开发环境
+    import '@babel/polly-fill' 
+    只引入没有导出、tree-shaking 会忽略掉不打包、为了防止所以设置 sideEffects
+    提取 css 也需要注意   
+    webpack.config.js
+      optimization: {
+        usedExports: true
+      }
+    package.json
+      sideEffects: [
+        "@babel/polly-fill",
+        "*.css"
+      ]
+      或
+      sideEffects: false // 对所有模块进行正常的 tree-shaking
+
+代码分割
+  同步引入
+    需要配置 optimization 会代码分割
+    配合 cacheGroups 同步代码才会分割
+    import _ from 'lodash'
+  异步引入
+    无须配置会自动代码分割
+    fuction importLodash () { import(/*webpackChunkName:"lodash"*/ 'lodash') }
+    importLodash()
+    
+  splitChunks: {
+    cacheGroups: {
+      vendors: {
+        test: /[\\/]node_modules[\\/]/,
+          分割同步代码是从 node_modules 中引入的则会打包到 vendors 组中
+          chunks: 'initial' 配置后必须配置此 vendors
+        priority: -10,
+        filename: 'vendors.js'
+          定义打包进 vendors 组里文件名
+          默认 vendors~main.js 表示要分割的文件符合 vendors 规则、这些文件的入口是 main.js
+      },
+      default: false
+    }
+    chunks: 'async',
+      async 只分割异步引入的模块(默认值)
+      initial 分割同步引入代码
+      all 都分割、配合 cacheGroups 同步代码才会分割
+    minSize: 30000,
+      引入的模块大于 30kb 则代码分割
+    maxSize: 0,
+    minChunks: 1,
+      当某个模块被引入了至少 1 次则做代码分割
+    maxAsyncRequests: 5, // 用默认不用修改
+    maxInitialRequests: 3, // 用默认不用修改
+    automaticNameDelimiter: '~',
+    name: true,
+    cacheGroups: {
+      vendors: {
+        test: /[\\/]node_modules[\\/]/,
+        priority: -10
+          priority // 值越大优先打包进入 vendors 组中
+      },
+      default: {
+        minChunks: 2,
+        priority: -20,
+        reuseExistingChunk: true // 复用之前已经打包好的模块
+      }
+    }
+    同步代码分割时、其实是既符合 vendors 组也符合 default
+    那么优先匹配 priority 值大的那个组规则
+  }
+chunk
+  每个打包后的文件都是一个 chunk
+prefetch/preload
+  prefetch
+    父块加载完成后开始加载
+  preload
+    预加载的块开始与父块并行加载
+
+manifest
+  webpack 自身代码、默认存在于入口文件与工具文件中
+  runtimeChunk: {
+    name: 'runtime'
+      抽离 manifest 代码
+
+shimming
+  plugins
+  new Webpack.ProvidePlugin({
+    $: 'jquery',
+      发现当前模块引用了 $ 自动引入 jquery 模块、模块名为 $
+    _join: ['lodash', 'join']
+  })
+
+环境变量
+  package.json
+    "build": "webpack --env.producction=abc --config ./build/webpack.prod.js"
+  const isDev = process.env.producction 值是 'abc'
+
+loader/plugin
+  loader用来处理模块、plugin则是在打包的某个时机做某些事情
+
+webpack性能优化
+  升级node webpack版本
+  尽可能少的模块上引用loader
+  plugin尽可能精简并确保可靠
+  resolve参数合理配置
+  node_modules中引入的文件只打包一次
+    DllReferencePlugin
+  控制包文件大小
+    不引入无用模块
+    大文件采用代码分割
+  合理使用source-map
+
+webpack2 以上版本
+  以 module 作为默认入口
+  之前版本是以 main 作为默认入口

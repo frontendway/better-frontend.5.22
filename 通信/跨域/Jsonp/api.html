@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // https://www.baidu.com/sugrec?pre=1&p=3&ie=utf-8&json=1&prod=pc&from=wise_web&sugsid=1422,28826,21127,18560,28768,28721,28830,28585,28603&wd=abcd&req=2&bs=abcd&pbs=abcd&csor=4&pwd=abcd&cb=jQuery110206352111282081669_1556338571708&_=1556338571714
+
+    function jsonp ({url, params, cb}) {
+      return new Promise((resolve, reject) => {
+        let script = document.createElement('script')
+        window[cb] = function (data) {
+          resolve(data)
+          document.body.removeChild(script)
+          window[cb] = null
+        }
+        let fullUrl = `${url}&pwd=${params}&cb=${cb}`
+        script.src = fullUrl
+        document.body.appendChild(script)
+      })
+    }
+
+    jsonp({
+      url: 'https://www.baidu.com/sugrec?pre=1&p=3&ie=utf-8&json=1&prod=pc&from=wise_web&sugsid=1422,28826,21127,18560,28768,28721,28830,28585,28603&wd=abcd&req=2&bs=abcd&pbs=abcd&csor=4',
+      params: 'abcd',
+      cb: 'jQuery110206352111282081669_1556338571708'
+    })
+    .then(data => {
+      console.log(data, 'data')
+    })
+  </script>
+</body>
+</html>

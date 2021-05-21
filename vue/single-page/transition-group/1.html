@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="./animate.min.css">
+	<style type="text/css">
+		div div{
+			width: 100px;
+			height: 100px;
+			background: red;
+		}
+	</style>
+</head>
+<body>
+
+	<div id="app">
+		<input type="text" @blur="search" v-model="keywords">
+		{{cur}}
+		<transition-group 
+		enter-active-class="animated bounce" 
+		leave-active-class="animated bounce">
+			<div v-for="(a,i) of cur" :key="i">{{a}}</div>
+		</transition-group>
+	</div>
+
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script type="text/javascript">
+		new Vue({
+			el: '#app',
+			data: {
+				keywords: '',
+				arr: [1,2,3,4,5]
+			},
+			computed: {
+				cur() {
+					return this.arr.filter(item => item == this.keywords);
+				}
+			},
+			methods: {
+				search() {
+					console.log(this.keywords)
+				}
+			}
+		})
+	</script>
+</body>
+</html>

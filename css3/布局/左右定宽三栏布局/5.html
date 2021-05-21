@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    #box{
+      border: 1px solid red;
+      display: table;
+    }
+    #left{
+      display: table-cell;
+      width: 300px;
+    }
+    #right{
+      display: table-cell;
+      width: 300px;
+    }
+    #center{
+      display: table-cell;
+    }
+  </style>
+</head>
+<body>
+  <div id="box">
+    <div id="left">right</div>
+    <div id="center">
+      <div>abc</div>
+      <div>abc</div>
+      <div>abc</div>
+      <div>abc</div>
+      <div>abc</div>
+    </div>
+    <div id="right">left</div>
+  </div>
+</body>
+</html>
+<!-- 
+  优点：兼容性最好
+  缺点：其中某个单元格高度变高、其他的也跟着变高（某些场景下不需要这样的效果）  
+-->

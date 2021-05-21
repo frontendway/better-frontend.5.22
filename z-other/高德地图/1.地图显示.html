@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style type="text/css">
+		html,body,div{height: 100%;}
+		body{margin: 0px;}
+	</style>
+</head>
+<body>
+	<div id="map-wrap"></div>
+	<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.6&key=edbfd1707204008b631b9cf3afae61a7"></script>
+	<script type="text/javascript">
+		var map=new AMap.Map('map-wrap',{
+			zoom: 18
+		});
+		/*
+			放大缩小:
+				map.zoomIn()
+				map.zoomOut()
+			设置城市:
+				map.setCity('南京')	
+		*/
+	</script>
+</body>
+</html>

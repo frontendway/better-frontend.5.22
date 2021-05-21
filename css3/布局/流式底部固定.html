@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    *{
+      padding: 0px;
+      margin: 0px;
+    }
+    .container-wrap{
+      height: 100vh;
+      padding-top: 50px;
+      box-sizing: border-box;
+    }
+    .container-wrap>div{
+      height: calc(100% - 50px);
+      overflow: auto;
+    }
+    .header{
+      position: fixed;
+      left: 0px;
+      top: 0px;
+      width: 100%;
+      height: 50px;
+      background: red;
+    }
+    footer{
+      height: 50px;
+      background: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <header class="header">header</header>
+    <div class="container-wrap">
+      <div>
+          <input type="text" />
+          <br>
+          top inner <br>
+          inner <br>
+          inner <br>
+          inner <br>
+          inner <br>
+          inner <br>
+          inner <br>
+          inner <br>
+          inner <br>
+          inner <br>
+          inner <br>
+          inner <br>
+          inner <br>
+          inner <br>
+          inner <br>
+          bottom inner <br>
+      </div>
+      <footer>footer</footer>
+    </div>
+  </div>
+  <script>
+  /* 
+    生命周期函数
+      初始化
+        设置 props 和 state
+      componentWillMount
+      render
+      componentDidMount    
+    更新
+      props
+        componentWillReceiveProps
+          父组件重新渲染
+        shouldComponentUpdate
+          返回bool
+        componentWillUpdate
+        render
+        componentDidUpdate
+      state
+        shouldComponentUpdate
+          返回bool
+        componentWillUpdate(nextProps, nextState)
+        render
+        componentDidUpdate
+        
+    销毁
+      componentDidUnmount  
+  */  
+    
+  </script>
+</body>
+</html>

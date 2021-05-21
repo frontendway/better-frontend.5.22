@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <iframe src="http://localhost:4000/2.html" id="frame" frameborder="0" onload="load()"></iframe>
+  <script>
+    // 当前域名为http://localhost:3000
+    function load () {
+      let frame = document.querySelector('#frame')
+      // url 地址一定要完整
+      frame.contentWindow.postMessage('发送的数据', 'http://localhost:4000')
+    }
+
+    window.onmessage = function (ev) {
+      console.log(ev.data)
+    }
+
+  </script>
+</body>
+</html>

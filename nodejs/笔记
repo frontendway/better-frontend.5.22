@@ -1,0 +1,13 @@
+path
+  path.join
+    只拼接路径
+  path.resolve
+    比 join 多了个当前文件件所在的绝对路径即__dirname
+  案例
+    path.join('a/b/c', '../', 'd/e/f', '/') -> 'a/b/d/e/f/'
+    path.resolve('a/b/c', '../', 'd/e/f', '/') -> '/'
+fs
+  判断文件是否存在、同步读取文件不存在则报错、异步则通过回调参数判断
+  fs.access('1.txt')
+  fs.accessSync('1.txt', err => {})
+  

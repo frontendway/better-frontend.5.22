@@ -1,0 +1,107 @@
+Object静态方法
+  Object.defineProperty
+    对象通过. 或 [] 设置的属性默认可删除、可写、可枚举
+    而 defineProperty 设置的属性默认都是 false
+    数据描述
+      Object.defineProperty(obj, key, {
+        configurable: false, 
+          仅为 true 时才可以修改属性描述符、且可删除属性
+        enumerable: false,   是否可枚举
+        value: undefined     属性值
+        writable: false      是不是可以被赋值
+      })
+    访问器描述
+      Object.defineProperty(obj, key, {
+        get () {},
+        set (newVal) {}
+
+  在对象上定义多个新属性或修改现有属性、并返回该对象
+    let obj = Object.defineProperties({}, {
+      name: {value: 'hello'},
+      age: {value: 20}
+  
+  Object.getOwnPropertyDescriptor(obj, 'name')
+    获取单个属性的属性描述符
+  Object.getOwnPropertyDescriptors(obj)
+    获取所有属性的属性描述符
+  
+  Object.seal(obj, 'name')
+    禁止删除
+      返回值还是 obj 对象
+  Object.isSealed
+
+  Object.freeze
+    冻结对象、只冻结一层
+  Object.isFrozen
+
+  Object.preventExtensions
+    禁止对象扩展、但可删除已有属性
+  Object.isExtensible
+    判断对象是否可扩展
+
+  Object.keys
+    返回对象 key 集合的数组
+    不含
+      不可枚举属性、原型链上属性
+      Symbol 值作为的 key
+  Object.entries
+    返回 [key, value] 形式的数组
+    不含
+      不可枚举属性、原型链上属性
+      Symbol 值作为的 key
+  Object.getOwnPropertyNames
+    返回指定对象的所有自身属性的属性名
+    包括不可枚举属性但不包括 Symbol 值作为名称的属性组成的数组
+  Object.getOwnPropertySymbols(obj)
+    获取对象下所有 symbol 键
+
+  Object.create
+    以参数作为原型对象、返回创建的实例
+    案例
+      var obj= {a: 2}
+      var obj2 = Object.create(obj)
+      obj2.a++
+        obj2.a = obj2.a + 1
+      console.log(obj.a, obj2.a)
+
+  Object.setPrototypeOf
+    设置对象的原型对象
+    返回指定对象的原型、如果没有继承属性返回 null
+    var obj = {name: 'hello'}
+    var p = Object.create(obj)
+    Object.getPrototypeOf(p) === obj
+
+  Object.is
+    判断 2 个值是否是相同可解决 +0, -0 NaN 的比较方式
+    Object.is(NaN, NaN) 返回 true
+    Object.is(+0, -0) 返回 false
+
+  var obj = {name: 1}
+    obj === Object(obj) -> true
+
+Object原型上 api
+  toString
+    十进制转换为二进制
+    num.toString(2)
+  hasOwnProperty
+    Object.prototype.hasOwnProperty.call(obj, key)
+    obj.hasOwnProperty('name')
+
+Reflect静态方法
+  Reflect.ownKeys
+    不可枚举、symbol 值作为的属性都能获取到
+
+案例
+  var obj = {n: 10, m: obj.n * 10}
+    开辟内存空间存储键值对
+    执行到 obj.n 时此内存空间地址还未执行obj变量
+    故 obj 的值是 undefined
+
+  key 隐式转换
+    key 为非字符串则会把值都 toString
+      obj[true 或 {} 或 null 或 undefined] 都是 toString 后作为 key
+    案例
+      var a = {}, b = {key: 'b'}, c = {key: 'c'}
+      a[b] = 123
+      a[c] = 456
+      a[b] -> 456

@@ -1,0 +1,13 @@
+iframe.contentWindow
+  被 iframe 标签所引用页面的 window 对象
+  iframe.contentWindow.document
+
+window.parent
+  当前窗口的父窗口
+window.top
+  当前窗口的最顶层窗口
+
+window.open
+  返回值是所打开页面的 window 对象
+window.opener
+  指向 window.open 的页面

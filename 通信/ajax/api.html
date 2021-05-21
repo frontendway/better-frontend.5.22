@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    const xhr = new XMLHttpRequest()
+    
+    xhr.open('method'.toUpperCase(), 'url', true)
+
+    xhr.responseType = 'json | text | blob'
+
+    xhr.setRequestHeader('Content-Type', 'application/json;charset=utf-8')
+    // 判断此次请求是否是 ajax 请求
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+
+    xhr.send(null)
+
+    xhr.onreadystatechange = function () {
+      if (
+        xhr.readyState == 4 && 
+        (xhr.status >= 200 && xhr.status < 304 || xhr.status === 206)
+      ) {
+        const respHeaders = xhr.getAllResponseHeaders()
+        const respData = responseType !== 'text' ? xhr.response : xhr.responseText
+        const resp = {
+          headers: respHeaders,
+          data: respData,
+          status: xhr.status,
+          statusText: xhr.statusText
+        }
+      }
+    }
+    
+    xhr.onerror = function () {}
+    xhr.ontimeout = function () {}
+    // 上传
+    xhr.upload.onprogress = function (ev) {
+      // ev.total 上传总量
+      // ev.loaded 已上传总量
+    }
+    // 下载
+    xhr.onprogress = function () {}
+
+  </script>
+</body>
+</html>

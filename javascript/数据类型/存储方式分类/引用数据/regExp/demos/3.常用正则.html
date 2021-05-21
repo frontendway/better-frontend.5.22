@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+	<script type="text/javascript">
+		/* 校验是否含有小数 */
+		function isFloat(val) {
+			return /\d+\.\d+/.test(val);
+		}
+		/* 校验是否中文名称组成 */
+		function ischina(str) {
+			var reg=/^[\u4E00-\u9FA5]{2,4}$/;
+			return reg.test(str);
+		}
+		/*校验是否全由8位数字组成 */
+		function isStudentNo(str) {
+			var reg=/^[0-9]{8}$/;
+			return reg.test(str);
+		}
+		/* 手机号验证 */
+		function isPhone(str) {
+			return /^1[34578]\d{9}$/.test(str);
+		}
+		/*校验邮件地址是否合法 */
+		function IsEmail(str) {
+			var reg=/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+$/;
+			return reg.test(str);
+		}
+		/* 清除前后空格 */
+		function strTrim(str) {
+			return str.replace(/(^\s*)|(\s*$)/g,'');
+		}
+		/* 匹配路径参数 */
+		function pathReg () {
+			// 2个数组合并为1个对象、reduce方法合适
+			let paramStr = '/user/:id/:name',
+      path = '/user/11/hello',
+      keys = [],
+      reg = /:([^/]+)/g
+
+      paramStr = paramStr.replace(reg, ($0, $1) => (keys.push($1), '([^/]+)'))
+
+      reg = new RegExp(`${paramStr}`)
+      const [, ...list] = path.match(reg)
+
+      const res = list.reduce((memo, next, i) => {
+        memo[keys[i]] = next
+        return memo
+      }, {})
+		}
+
+	</script>
+</body>
+</html>

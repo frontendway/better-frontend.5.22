@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let doc = parse(
+      `<html>
+        <head>
+          <title>Hello</title>
+        </head>
+        <body>
+          <div id="container">
+            <div class="header"></div>
+            <div class="content"></div>
+            <div class="footer"></div>
+          </div>
+        </body>
+      </html>
+      `
+    )
+
+    function parse (htmlStr) {
+      htmlStr = htmlStr.replace(/html|head|body/g, ($0) => ($0 + '1'))
+
+      let frgDiv = document.createElement('div')
+      frgDiv.innerHTML = htmlStr
+
+      function flat (ele) {
+        const tree = {
+          tag: ele.tagName.toLowerCase().replace('1', ''),
+          children: []
+        }
+
+        if (ele.children.length) {
+          for (let item of ele.children) {
+            tree.children.push(flat(item))
+          }
+        }
+        
+        return tree
+      }
+      
+      console.log(flat(frgDiv.firstElementChild))
+      frgDiv = null
+    }  
+  </script>
+</body>
+</html>

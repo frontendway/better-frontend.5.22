@@ -1,0 +1,7 @@
+移动端
+  touches
+    当前屏幕手指列表
+  targetTouches
+    当前元素上手指列表
+  changedTouches
+    触发当前事件手指列表

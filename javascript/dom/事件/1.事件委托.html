@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style type="text/css">
+		* {
+			padding: 0px;
+			margin: 0px;
+		}
+		li {
+			background: red;
+			margin-bottom: 5px;
+		}
+	</style>
+</head>
+
+<body>
+	<ul>
+		<li>li</li>
+		<li>li</li>
+		<li>li</li>
+		<li>li</li>
+		<li>li</li>
+	</ul>
+</body>
+
+</html>
+<script type="text/javascript">
+	var ul = document.querySelector('ul');
+	/*事件源
+		ie: window.event.srcElement
+		标准下: event.target
+	*/
+	ul.onmouseover = function (ev) {
+		var ev = ev || window.event
+		var target = ev.target || ev.srcElement
+		target.style.background = 'yellow'
+		console.log(target.nodeName)
+	}
+
+</script>

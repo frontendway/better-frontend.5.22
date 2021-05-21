@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style type="text/css">
+		ul{width: 200px;}
+		li{list-style: none;width: 50px;height: 50px;border:1px solid red;margin: 5px;float: left;}
+		.red{background: red;}
+	</style>
+</head>
+<body>
+	<ul>
+		<li>1</li>
+		<li>2</li>
+		<li>3</li>
+		<li>4</li>
+		<li>5</li>
+		<li>6</li>
+		<li>7</li>
+		<li>8</li>
+		<li>9</li>
+	</ul>
+</body>
+</html>
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$lis=$('li');
+	var nowNum=0;
+	var timer=null;
+	$(document).click(function(){
+		var index=parseInt(Math.random()*$lis.length + $lis.length);
+		timer=setInterval(function(){
+			$lis.eq(nowNum%$lis.length).addClass('red').siblings().removeClass('red');
+			if(nowNum == index){
+				clearInterval(timer);
+				console.log($lis.eq(nowNum%$lis.length).html());
+				nowNum=0;
+				return;
+			}
+			nowNum++;
+		},100)
+	});
+</script>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+	<div id="app">
+		<h1>{{title}}</h1>
+		<span>{{test}}</span>
+		<ul>
+			<li v-for="a in list1">{{a.age}}</li>
+		</ul>
+		<ul>
+			<li v-for="b in list2">{{b.age}}</li>
+		</ul>
+	</div>	
+	
+	<script>
+
+		class MVue {
+			constructor (opt) {
+				this.opt = opt;
+				const el = document.querySelector( this.opt.el );
+				this.templateArr = el.outerHTML.split(/\n/).map(item => item.trim());
+				this.init();
+			}
+			init () {
+				this.observer();
+				this.setupArrayAction();
+				this.compile();
+			}
+			compile () {
+				const template = this.createTemplate();
+				this.render( template );
+			}
+			observer () {
+				const data = this.opt.data;
+				for (let key in data) {
+					Object.defineProperty(this, key, {
+						configurable: true,
+						enumerable: true,
+						get () {
+							return data[key];
+						},
+						set (newVal) {
+							data[key] = newVal;
+							this.compile();
+							return newVal;
+						}
+					});
+				}
+			}
+			createTemplate () {
+				let templateArr = this.templateArr;
+				let template = `
+					let arr = [];
+				`;
+				let regExp = /(\{\{)(.*)(\}\})/;
+				let regFor = /v-for="(.*)"/;
+
+				for (let i = 0; i < templateArr.length; i++) {
+					let item = templateArr[i];
+					if (regFor.test( item )) {
+						let list = item.match( regFor )[1].split(' ')[2];
+						let copyItem = item.replace(regFor, '');
+						copyItem = copyItem.replace(regExp, ($0, $1, $2) => {
+							let dots = $2.split('.');
+							return dots.length > 1 ? `'+item.${dots[1]}+'` : `'+item+'`;
+						});
+						
+						template += `
+							var tag = '${item}';
+							data.${list}.forEach((item, i) => {
+								arr.push('${copyItem}');
+							})
+						`;
+						continue;
+					}
+
+					if (regExp.test( item )) {
+						item = item.replace(regExp, ($0, $1, $2) => {
+							return `'+data.${$2}+'`;
+						});
+						template += `arr.push('${item}');`;
+						continue;
+					}
+
+					template += `arr.push('${item}');`;
+				}
+				template += `return arr.join('')`;
+				return template;
+			}
+			render (template) {
+				let html = new Function( 'data', template )( this.opt.data );
+				const app = document.querySelector( this.opt.el );
+				app.innerHTML = html;
+			}
+			setupArrayAction () {
+				const originArrayProto = Array.prototype;
+				const newMethods = Object.create( originArrayProto );
+				this.changePrototype( newMethods );
+				const _this = this;
+				const methods = ['push','pop','shift','unshift','splice','sort','reverse'];
+				methods.forEach(method => {
+					newMethods[method] = function () {
+						var originalMethod = originArrayProto[method];
+						originalMethod.apply(this, [...arguments]);
+						_this.compile();
+					}
+				});
+			}
+			changePrototype (newMethods) {
+				let data = this.opt.data;
+				for (let key in data) {
+					if (Array.isArray(data[key])) {
+						data[key].__proto__ = newMethods;
+					}
+				}
+			}
+		}
+		
+		let app = new MVue({
+			el: '#app',
+			data: {
+				title: '标题',
+				test: '测试',
+				list1: [
+					{title: 'aa', age: 20},
+					{title: 'bb', age: 22},
+					{title: 'cc', age: 21}
+				],
+				list2: [
+					{title: 'aa', age: 20},
+					{title: 'bb', age: 22},
+					{title: 'cc', age: 21}
+				]
+			}
+		});
+
+	</script>
+
+</body>
+</html>

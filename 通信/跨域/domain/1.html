@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <iframe src="http://b.test.cn:3000/2.html" onload="load()" id="frame" frameborder="0"></iframe>
+  <script>
+    // 访问此文件路径必须为 http://a.test.cn:3000/1.html 
+    // 此方案仅限主域相同、子域不同的跨域应用场景
+    document.domain = 'test.cn'
+    function load () {
+      console.log(frame.contentWindow.a)
+    }
+  </script>
+</body>
+</html>

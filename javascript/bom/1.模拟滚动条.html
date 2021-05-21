@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style type="text/css">
+		li{list-style-type: none;}
+		*{margin: 0px;padding: 0px;}
+		.left{width: 50px;height: 300px;background: #ccc;position: relative;float: left;margin-right: 20px;}
+		span{position: absolute;left: 0px;top: 0px;width: 100%;height: 30px;background: red;}
+		.right{width: 200px;height: 300px;border: 1px solid red;position: relative;float: left;}
+		ul{position: absolute;left: 0px;top: 0px;}
+	</style>
+</head>
+<body>
+	<div class="left"><span></span></div>
+	<div class="right">
+		<ul>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+			<li>asdfasfdasdfasdf</li>
+		</ul>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+	var span=document.querySelector('span');
+	var left=document.querySelector('.left');
+	var ul=document.querySelector('ul');
+	span.onmousedown=function(ev){
+		var oTop=this.offsetTop;
+		var clickY=ev.pageY;
+		document.onmousemove=function(ev){
+			var disY=ev.pageY - clickY;
+			var target=oTop+disY;
+			var pix=span.offsetTop / (left.clientHeight - span.clientHeight);
+			if(target <= 0){
+				target = 0;
+			}
+			if(target >= left.clientHeight - span.clientHeight){
+				target = left.clientHeight - span.clientHeight;
+			}
+			span.style.top=target+'px';
+			ul.style.top=-223*pix+'px';
+		}
+		document.onmouseup=function(){
+			document.onmousemove=document.onmouseup=null;
+		}
+	}
+</script>

@@ -1,0 +1,11 @@
+原型函数
+  new Date().toLocaleString()
+    "2019/2/5 上午11:10:11"
+  new Date().toLocaleDateString()
+    "2019/2/5"
+  new Date().toLocaleTimeString()
+    "上午11:12:54"
+
+时间戳
+  1970 年 1 月 1日 0 时 0 分 0 秒到现在的秒数
+  js 的时间戳是 13 位、精确到毫秒

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var str = 'asdf asf-asd-asdf, i am is ssss, hello world'
+    var reg =/([^,]+)/g
+
+    str.replace(reg, function ($0, $1) {
+      return $1.replace(/\w/, function ($0) {
+        return $0.toUpperCase()
+      })
+    })
+  </script>
+</body>
+</html>

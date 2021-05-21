@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <!-- 
+    1.html 2.html 均在 http://localhost:3000 下
+    3.html 在 http://localhost:4000 下
+    1.html 中引入 3.html、3.html 中动态创建 iframe 并设置 hash 值给 2.html 然后 2.html 页面就可以 改变 1.html 中的 hash 值 因为是同域下的 2 个 html 页面
+  -->
+  <iframe src="http://localhost:4000/3.html" frameborder="0"></iframe>
+  <script>
+    window.onhashchange = function () {
+      console.log(window.location.hash)
+    }
+  </script>
+</body>
+</html>

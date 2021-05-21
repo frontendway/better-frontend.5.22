@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var treeList = [
+      {"pid":-1,"path":"/cart","name":"购物车","id":1,"auth":"cart","children":[{"pid":1,"path":"/cart/cart-list","name":"购物车列表","id":4,"auth":"cart-list","children":[{"pid":4,"path":"/cart/cart-list/lottery","name":"彩票","id":5,"auth":"lottery","children":null},{"pid":4,"path":"/cart/cart-list/product","name":"商品","id":6,"auth":"product","children":null}]}]},{"pid":-1,"path":"/shop","name":"商店","id":2,"auth":"shop","children":null},{"pid":-1,"path":"/profile","name":"个人中心","id":3,"auth":"profile","children":null}
+    ]
+    
+    function flat1 (arrs) {
+      let newArr = []
+
+      arrs.forEach(item => {
+        if (Array.isArray(item.children)) {
+          newArr = newArr.concat(flat1(item.children))
+        }
+        delete item.children
+        newArr.push(item)
+      })
+
+      return newArr
+    }
+
+    function flat2 (arrs) {
+      return arrs.reduce((prev, current) => {
+        return prev.concat(
+          current,
+          Array.isArray(current.children) ? flat2(current.children) : []
+        )
+      }, [])
+    }
+
+    console.log(flat1(treeList))
+    
+  </script>
+</body>
+</html>

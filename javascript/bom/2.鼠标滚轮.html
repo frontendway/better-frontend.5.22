@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style type="text/css">
+		div {
+			width: 200px;
+			height: 200px;
+			background: red;
+			margin: 100px auto;
+			transform-style: preserve-3d;
+			perspective: 800px;
+		}
+
+	</style>
+</head>
+
+<body>
+	<div></div>
+</body>
+
+</html>
+<script type="text/javascript">
+	var oBox = document.querySelector('div');
+	
+	/*
+		div.onmousewheel=function(){
+			alert(1)
+		}
+	*/
+	oBox.addEventListener('mousewheel', wheelFn, false)
+	// 火狐浏览器
+	oBox.addEventListener('DOMMouseScroll', wheelFn, false)
+
+	function wheelFn (ev) {
+		ev = ev || window.event
+		// true向上 false 向下
+		var direction
+		direction = ev.wheelDelta ? ev.wheelDelta > 0 : ev.detail < 0
+
+		// jquery中写法
+		ev.originalEvent.wheelDelta ? ev.originalEvent.wheelDelta > 0 : ev.detail < 0
+
+		if (direction) {
+			console.log('上')
+		} else {
+			console.log('下')
+		}
+
+	}
+
+</script>

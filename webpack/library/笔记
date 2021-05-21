@@ -1,0 +1,3 @@
+package.json
+  main 入口必须填写打包后导出的 js
+  

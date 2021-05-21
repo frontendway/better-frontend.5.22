@@ -1,0 +1,110 @@
+修饰符
+  m 多行匹配
+  i 忽略大小写
+  y 粘连
+  u 
+
+元字符
+  量词元字符
+    + 1次到多次
+    ? 出现1次或不出现
+    * 出现0到多次
+    {n,} 出现 n 到多次
+    {n, m} 出现 n, m 次
+
+  特殊意义元字符
+    . 除去 \n(换行) 的任意字符
+    \w 数字字母下划线
+    \s 空白字符
+    \b 边界符
+
+    x|y, [a-z], [^a-z]
+    [xyz], [^xyz] 中括号里的 ^ 代表非
+    ?: 只匹配不捕获
+    ?= 正向预查
+    ?! 负向预查
+
+案例
+  /\\d/.test('\\d')  -> true
+  /\\\d/.test('\\9') -> true
+    细节
+      \\ 同时出现就是 \\ 本身
+
+  var reg = /^18|19$/
+    以 18 开始 或 19 结尾 全符合
+    以 1 开始 9 结尾 中间是 8 或 1
+    18 或 19
+
+  var reg = /^(18|19)$/
+    只能是 18 或 19 符合
+
+  var reg = /([a-z])(\w)\2/
+    \2 代表出现和第二个分组一样内容
+
+  中括号中出现的元字符一般都代表转义后含义
+    var reg = /^[.?+&()_-/]$/
+  仍是正则中的含义
+    var reg = /[\w\s\S]/
+
+  18~65区间
+    var reg = /^(18|19)|([2-5]\d)|(6[0-5])$/
+  22-50区间
+    var reg = /^(2[2-9])|([3-4]\d)|(50)$/
+
+exec
+  未捕获到返回 null、匹配则返回数组
+  即使使用全局匹配、exec 也只匹配一次
+
+str.match
+  加上修饰符g、只匹配大正则匹配的内容、小分组中无法匹配
+  未匹配返回 null
+
+reg.test
+  var str = 'ad asdf {0} asd {11} asdf {111}'
+  var reg = /\{(\d+)\}/g
+  reg.test(str)
+  RegExp.$1 -> 获取第一个分组里的内容
+
+匹配*代替
+  var str = '176848478393998478389'
+  var reg = /(^\d{6})(\d+)(\d{4}$)/
+  str = str.replace(reg, ($0, $1, $2, $3) => ($1 + '*'.repeat($2.length) + $3))
+
+split
+  var str = 'a=aa&b=bb&c=cc'
+  str.split(/(&|=)/)
+    加了分组后会把& = 都捕获、所以要让其只匹配不捕获
+    str.split(/(?:&|=)/)
+
+replace
+  str.replace(old, new) 并不会全局替换、只替换一次
+  案例
+    格式化时间
+    var str = '2017-11-07 16:32:00'
+    var arr = ['年','月','日','时','分','秒']
+    var index = 0
+    str = str.replace(/(-|\s|:)/g, () => {
+      return arr[index++]
+    }) + arr[index]
+    或
+    str = str.split(/-|\s|:/g).map((item, i) => item + arr[i]).join('')
+  案例
+    url转查询字符串
+    var str = 'aaa?name=hello&age=20#teacher'
+    var reg = /([^?=&#]+)=([^?=&#]+)/g
+    var obj = {}
+    str.replace(reg, function ($0, $1, $2) {
+      obj[$1] = $2
+    })
+
+构造函数创建
+  /\d+/ -> new RegExp('\\d+')
+    只要是出现1次\ 必须换成 \\
+  合法数字
+    var reg = new RegExp('^[-+]?\\d+(\\.\\d+)?$')
+
+案例
+  <%=name%> <%=age%>
+    匹配name age字段
+    /<%=([\s\S]*?)%>/g
+    ? 尽可能少的匹配

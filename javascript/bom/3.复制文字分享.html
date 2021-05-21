@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+	<p>Web前端开发又有初级、高档前端等等级。这首要依赖于本身专业技能水平之间的区别对待，像现在通常的Web前端开发又有初级、高档前端等等级。这首要依赖于本身专业技能水平之间的区别对待，像现在通常的Web前端开发又有初级、高档前端等等级。这首要依赖于本身专业技能水平之间的区别对待，像现在通常的Web前端开发又有初级、高档前端等等级。这首要依赖于本身专业技能水平之间的区别对待，像现在通常的</p>
+</body>
+</html>
+<script type="text/javascript">
+	function selectText(){
+		if(document.selection){ 
+			/*IE下*/
+			return document.selection.createRange().text;
+		}else{
+			return window.getSelection().toString();
+		}
+	}
+
+	document.querySelector('p').oncopy = function () {
+		var selection = window.getSelection()
+		var op = "<p>版权所有: " + document.location.href + "</p>"
+		var text = selectText()
+
+		if (text) {
+			var op1 = `<p>${text}</p>${op}`
+			var oDiv = document.createElement('div')
+
+			oDiv.style.position = 'absolute'
+			oDiv.style.left = '-99999px'
+			document.body.appendChild(oDiv)
+			oDiv.innerHTML = op1
+
+			selection.selectAllChildren(oDiv)
+
+			window.setTimeout(function() {
+				document.body.removeChild(oDiv)
+			}, 200)
+		}
+	}
+
+</script>

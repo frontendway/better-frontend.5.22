@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <input type="text" v-model="msg">
+    <p>{{school.name}}</p>
+    <p>{{school.age}}</p>
+    <p>数组： {{school.age1}}</p>
+    <p>obj： {{school.test.obj.msg}}</p>
+    <ul>
+      <li>1</li>
+      <li>2</li>
+    </ul>
+  </div>
+
+  <script>
+
+    let map = new Map()
+
+    class Subject {
+      constructor () {
+        this.subs = []
+      }
+      attach (watcher) {
+        const isHas = this.subs.some(w => w.expression === watcher.expression)
+        if (!isHas) {
+          this.subs.push(watcher)
+        }
+      }
+      notify (target, key, vm) {
+        let res = this.subs.some(w => {
+          let res = w.expression.split('.').reduce((current, next) => {
+            return current[next]
+          }, vm.$data)
+
+          if (typeof res != 'object' && target[key] === res) {
+            w.update()
+            return true
+          }
+        })
+
+        if (!res) this.subs.forEach(w => w.update())
+      }
+    }
+
+    class Watcher {
+      constructor (vm, expression, cb) {
+        Subject.target = this
+        this.vm = vm
+        this.expression = expression
+        this.cb = cb
+        this.prevValue = null
+      }
+      update () {
+        const newValue = DirectiveUtil.getExpressionValue(this.expression, this.vm.$data)
+        if (newValue !== this.prevValue || Array.isArray(newValue)) {
+          this.cb(newValue)
+        }
+      }
+    }
+
+    const DirectiveUtil = {
+      getExpressionValue (expression, data) {
+        return expression.split('.').reduce((cur, next) => {
+          return cur[next]
+        }, data)
+      },
+      model (ele, expression, vm) {
+        const w = new Watcher(vm, expression, newValue => this.toUpdate.modelUpdate(ele, newValue))
+        const val = this.getExpressionValue(expression, vm.$data)
+        w.prevValue = val
+        Subject.target = null
+        this.toUpdate.modelUpdate(ele, val)
+      },
+      repeatFetchTextContent (vm, expression) {
+        let reg = /\{\{([\s\S]*?)\}\}/g
+        return expression.replace(reg, (...arg) => {
+          return this.getExpressionValue(arg[1], vm.$data)
+        })
+      },
+      text (ele, expression, vm) {
+        let reg = /\{\{([\s\S]*?)\}\}/g
+        const newText = expression.replace(reg, (...arg) => {
+          const w = new Watcher(vm, arg[1], () => {
+            this.toUpdate.textUpdate(ele, this.repeatFetchTextContent(vm, expression))
+          })
+          
+          let str = this.getExpressionValue(arg[1], vm.$data)
+          w.prevValue = str
+          Subject.target = null
+
+          return str
+        })
+        
+        this.toUpdate.textUpdate(ele, newText)
+      },
+      toUpdate: {
+        modelUpdate (ele, value) {
+          ele.value = value
+        },
+        textUpdate (text, value) {
+          text.textContent = value
+        }
+      }
+    }
+
+    class Compiler {
+      constructor (el, vm) {
+        this.el = this.isElement(el) ? el : document.querySelector(el)
+        this.vm = vm
+        
+        const frg = this.nodeToFrg(this.el)
+        this.compile(frg)
+        this.el.appendChild(frg)
+      }
+      nodeToFrg (el) {
+        let frg = document.createDocumentFragment()
+        let f = null
+        while (f = el.firstChild) {
+          frg.appendChild(f)
+        }
+
+        return frg
+      }
+      isElement (element) {
+        return element.nodeType && element.nodeType === 1
+      }
+      compileElemenet (ele) {
+        let attrs = [...ele.attributes]
+        attrs.forEach(attr => {
+          const {name, value: expression} = attr
+          if (name.startsWith('v-')) {
+            let [prefix, directive] = name.split('-')
+            DirectiveUtil[directive](ele, expression, this.vm)
+          }
+        })
+      }
+      compileText (text) {
+        let reg = /\{\{([\s\S]*?)\}\}/g
+        const content = text.textContent
+        if (reg.test(content)) {
+          DirectiveUtil.text(text, content, this.vm)
+        }
+      }
+      compile (node) {
+        let childNodes = node.childNodes
+        ;[...childNodes].forEach(child => {
+          if (this.isElement(child)) {
+            this.compileElemenet(child)
+            this.compile(child)
+          } else {
+            this.compileText(child)
+          }
+        })
+      }
+    }
+
+    class Obsever {
+      constructor (vm) {
+        this.vm = vm
+        this.sub = new Subject()
+        this.obsever(vm.$data)
+        vm.$data = this.proxyTarget(vm.$data)
+      }
+      obsever (data) {
+        for (let key in data) {
+          const value = data[key]
+          if (typeof value === 'object') {
+            this.obsever(value)
+            data[key] = this.proxyTarget(value)
+          }
+        }
+      }
+      proxyTarget (target) {
+        return new Proxy(target, {
+          get: (target, key, value) => {
+            Subject.target && this.sub.attach(Subject.target)
+            return target[key]
+          },
+          set: (target, key, value) => {
+            if (typeof value === 'object') {
+              this.obsever(value)
+              value = this.proxyTarget(value)
+            }
+            
+            let res = Reflect.set(target, key, value)
+            this.sub.notify(target, key, this.vm)
+            return res
+          }
+        })
+      }
+    }
+
+    class Vue {
+      constructor (opt) {
+        this.$el = opt.el
+        this.$data = opt.data
+
+        if (this.$el) {
+          new Obsever(this)
+          new Compiler(this.$el, this)
+        }
+      }
+    }
+
+    let vm = new Vue({
+      el: '#app',
+      data: {
+        msg: 'msgvalue',
+        school: {
+          name: 'nameval',
+          age: 'ageval',
+          age1: [1, 2, 3],
+          test: {
+            obj: {
+              msg: 'innermsg'
+            }
+          }
+        }
+      }
+    })
+    
+    // 初稿只支持vm.$data 改变值
+
+  </script>
+</body>
+</html>

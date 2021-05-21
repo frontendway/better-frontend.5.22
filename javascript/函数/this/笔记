@@ -1,0 +1,52 @@
+行间事件函数
+  <div onClick="fn"></div> function fn () { console.log(this) }
+    函数不触发
+  <div onClick="console.log(this)"></div>
+    this 指向当前元素
+  <div onClick="( (function() {console.log(this)})() )"></div>
+    this 指向 window
+  <div onclick="fn()">测试的元素</div> function fn () { console.log(this) }
+    this 指向 window
+
+对象内调用函数
+  案例
+    var obj = {}
+    function fn () { console.log(this) }
+    obj.fn = fn
+    obj.fn() this 指向 obj
+  案例
+    var obj = {
+      o: {
+        fn: function () { console.log(this) }
+      }
+    }
+    var temp = obj.o.fn
+    temp() this 指向window
+
+原型链上函数
+  var p = {a: function () { console.log(this.b) }, b: 1}
+  var c = Object.create(p)
+  c.a()
+    this 指向 c、c本身无b属性、所以往原型上找
+
+get、set函数
+  var obj = {
+    a: 1,
+    b: 2,
+    get sum () {
+      this 指向当前 obj
+      return this.a + this.b
+    }
+  }
+
+bind、call 和 apply 各自有什么区别？
+  call、apply 会立即执行函数
+  call 一个个接收参数、apply 接收参数是数组的形式
+  bind 
+    不会立刻执行函数而是返回一个新函数
+    绑定与调用返回的函数都可以传递参数
+  非严格模式
+    不传入 this 或传入 unll undefined、 this 都是 window
+    传入基本数据类型则 this 是被包装器包装过后的值
+  严格模式下
+    传入什么值就是什么值、不传入是 undefined

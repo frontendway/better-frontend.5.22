@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    li{
+      list-style: none;
+    }
+    *{
+      padding: 0px;
+      margin: 0px;
+    }
+    .item{
+      height: 80px;      
+      background: #ccc;
+      width: 100%;
+      font-size: 40px;
+      text-align: center;
+      line-height: 80px;
+    }
+    .wrap{
+      margin: 0px auto;
+      width: 500px;
+    }
+    .wrap ul{
+      position: relative;
+      width: 500px;
+    }
+    .wrap li{
+      margin-bottom: 10px;
+    }
+    .wrap .transition{
+      transition: all .5s ease 0s;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <ul id="ul">
+      <li data-target="target" class="item"><div>1</div></li>
+      <li data-target="target" class="item"><div>2</div></li>
+      <li data-target="target" class="item"><div>3</div></li>
+      <li data-target="target" class="item"><div>4</div></li>
+      <li data-target="target" class="item"><div>5</div></li>
+      <li data-target="target" class="item"><div>6</div></li>
+      <li data-target="target" class="item"><div>7</div></li>
+      <li data-target="target" class="item"><div>8</div></li>
+    </ul>
+  </div>
+</body>
+</html>
+<script>
+  
+class Dragger {
+  constructor (id, tagName) {
+    this.el = document.getElementById(id);
+    this.tagName = tagName;
+    this.currentElement = null;
+    this.children = this.getChildren();
+    this.transY = this.getTransY();
+    this.initClickY = 0;
+    this.isGoingUp = null;
+    this.timer = null;
+    this.isMove = false;
+    this.flag = false;
+    this.isMouseDown= false;
+    this.init();
+  }
+  init () {
+    this.setPosition();
+    this.bindEvents();
+    this.bindTransitionEnd();
+  }
+  getTransY () {
+    const offsetHeight = this.children[0].offsetHeight;
+    const marginBottom = this.getStyle(this.children[0], 'marginBottom');
+    return offsetHeight + marginBottom;
+  }
+  getStyle (ele, attr) {
+    return parseFloat( getComputedStyle( ele )[ attr ] );
+  }
+  getChildren () {
+    return this.classArrayToArray( this.el.getElementsByTagName( this.tagName ) );
+  }
+  setPosition () {
+    this.getChildren().forEach((item, i) => {
+      item.setAttribute( 'index', i );
+      item.style.left = '0px';
+      item.style.top = `${item.offsetTop}px`;
+      item.style.transform = 'translateY(0px)';
+    });
+  }
+  classArrayToArray (nodeList) {
+    return Array.prototype.slice.call(nodeList, 0);
+  }
+  bindTransitionEnd () {
+    this.el.addEventListener('webkitTransitionEnd', () => {
+      this.remove();
+    }, false);
+  }
+  remove () {
+    clearTimeout( this.timer );
+    this.timer = setTimeout(() => {
+      const children = this.getChildren();
+      for (let i =0;i<children.length;i++) {
+        children[i].classList.remove('transition');
+      }
+      setTimeout(() => {
+        this.cloneNode.style.position = 'static';
+        this.currentElement.remove();
+        this.setPosition();
+        this.flag = false;
+        this.isMouseDown = false;
+      }, 1000)
+    });
+  }
+  bindEvents () {
+    this.el.addEventListener('mousedown', ev => {
+      const currentElement = this.getParentLi( ev );
+      if (currentElement && !this.isMouseDown) {
+        this.isMouseDown = true;
+        this.initMouseDown( ev, currentElement );
+
+        document.onmousemove = this.mousemoveHandle.bind( this );
+        document.onmouseup = this.mouseupHandle.bind( this );
+      }
+      ev.preventDefault();
+      ev.stopPropagation();
+    }, false);
+  }
+  initMouseDown (ev, item) {
+    this.isMove = false;
+    this.currentElement = item;
+    this.initClickY = ev.pageY;
+  }
+  getParentLi (ev) {
+    let curNode = ev.target;
+    if ( curNode === this.el ) return false;
+    while ( !curNode.dataset['target'] ) {
+      curNode = curNode.parentNode;
+    }
+    return curNode;
+  }
+  setCloneNode (node, ev) {
+    this.cloneNode = node.cloneNode( true );
+    document.body.appendChild( this.cloneNode );
+
+    this.disX = ev.pageX - node.getBoundingClientRect().x;
+    this.disY = ev.pageY - node.getBoundingClientRect().y;
+    const x = node.getBoundingClientRect().x;
+    const y = node.getBoundingClientRect().y;
+
+    this.cloneNode.style.cssText = `
+      position: fixed;
+      left: ${x}px; 
+      top: ${y}px; 
+      width: ${node.offsetWidth}px; 
+      height: ${node.offsetHeight}px;
+    `;
+  }
+  mousemoveHandle (ev) {
+    if ( !this.flag ) {
+      this.flag = true;
+      this.isMove = true;
+      this.currentElement.style.opacity = 0;
+      this.setCloneNode( this.currentElement, ev );
+    }
+    this.isGoingUp = this.initClickY > ev.pageY;
+    const position = {
+      y: ev.pageY - this.disY
+    }
+    this.setCss( position );
+  }
+  setCss ( position) {
+    this.cloneNode.style.left = `${position.x}px`;
+    this.cloneNode.style.top = `${position.y}px`;
+  }
+  mouseupHandle (ev) {
+    if ( this.isMove ) {
+      const position = {
+        x: ev.pageX,
+        y: ev.pageY
+      }
+      const target = this.findClose( position );
+      const index = target.getAttribute( 'index' );
+      const betweens = this.filterBetween( target );
+      this.setStep( betweens );
+
+      this.setStyle( target );
+      this.insertCloneNode(index);
+    }
+    document.onmousemove = document.onmouseup = null;
+  }
+  setStep (betweens) {
+    betweens = this.isGoingUp ? betweens.reverse() : betweens;
+    betweens.forEach((item, i) => {
+      item.classList.add('transition');
+      setTimeout(() => {
+        if (this.isGoingUp) {
+          item.style.transform = `translateY(${this.transY}px)`;
+        } else {
+          item.style.transform = `translateY(-${this.transY}px)`;
+        }
+      }, (i+1) * 30)
+    });
+  }
+  setStyle (target) {
+    this.cloneNode.style.position = 'absolute';
+    this.cloneNode.style.left = target.style.left;
+    this.cloneNode.style.top = target.style.top;
+  }
+  insertCloneNode (index) {
+    index = parseInt( index );
+    const children = this.getChildren();
+    if (this.isGoingUp) {
+      this.el.insertBefore( this.cloneNode, children[ index ] );
+    } else {
+      this.el.insertBefore( this.cloneNode, children[ index + 1 ] );
+    }
+  }
+  filterBetween (target) {
+    let start;
+    let end;
+    if (this.isGoingUp) {
+      start = target.getAttribute( 'index' );
+      end = this.currentElement.getAttribute( 'index' );
+    } else {
+      start = this.currentElement.getAttribute( 'index' );
+      end = target.getAttribute( 'index' );
+    }
+    return this.getChildren().filter(item => {
+      const index = item.getAttribute( 'index' );
+      if (this.isGoingUp) {
+        return index >= start && index < end;
+      } else {
+       return index > start && index <= end;
+      }
+    });
+  }
+  findClose (position) {
+    return this.findRow( position.y )[0];
+  }
+  findRow (y) {
+    const children = this.getChildren();
+    let rowRes = [];
+    let temp = 99999;
+    let minY = 0;
+    children.forEach(item => {
+      let itemY = Math.abs( item.getBoundingClientRect().y + item.offsetHeight / 2 - y);
+      if (itemY < temp) {
+        temp = itemY;
+        minY = item.getBoundingClientRect().y;
+      }
+    });
+    children.forEach(item => {
+      if (item.getBoundingClientRect().y == minY) {
+        rowRes.push( item );
+      }
+    });
+    return rowRes;
+  }
+}
+
+new Dragger('ul', 'li');
+
+</script>

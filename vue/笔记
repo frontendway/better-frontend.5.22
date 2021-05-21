@@ -1,0 +1,225 @@
+生命周期
+	beforeCreate
+		是获取不到 props 或 data 中的数据的
+	created
+		new Vue 必定执行 beforeCreate 和 created
+		此时 this.$el 是 undefined
+		可以访问到 props 或 data 中的数据
+	beforeMount
+		此时 this.$el 是 div#app
+	mounted
+		如不指定 el 则不执行 beforeMount 和 mounted
+		此时 this.$el 是 template 里的 html
+	beforeUpdate
+	updated
+	activated
+	deactivated
+	beforeDestroy
+	destroyed:
+		路由切换时触发或手动调用
+		仅移除事件监听
+
+过滤器
+	filters: {
+		toFix() { this指向window
+
+.sync语法糖
+	<child :m="money" @update:m="val => money = val"></child>
+	<child :m.sync="money"></child>
+
+动画
+	第一帧
+		v-enter
+		v-enter-active
+	第二帧
+		v-enter-active
+		v-enter-to
+	第三帧
+		删除所有class
+	第一次进入显示动画
+		<transition 
+			type="transition" 以 transition 过度动画时长为准
+			:duration="{enter: 5000, leave: 1000}" 自定义动画时长
+			enter-active-class="animated bounce" 
+			leave-active-class="animated bounce" 
+			appear 
+			appear-active-class="animated bounce"
+		>
+			<div v-show="flag"></div>
+		</transition>
+  
+动态绑定样式
+	class:
+		<div :class="{red: true,bg: false}"></div>
+		<div :class="[class1,class2]"></div>
+	style:
+		<div :style="{backgroundColor: 'red',color: 'pink'}"></div>
+
+指令
+	全局:
+		Vue.directive('color',{
+			bind() { 指令首次绑定元素时 },
+			inserted() { 指令绑定的元素插入DOM时, 这个时机比 bind 晚一些 },
+			update() { 数据更新时 },
+			componentUpdated() {},
+			unbind() {}
+		})
+		指令回调函数参数:
+			el
+			binding:
+				binding.name
+				binding.value
+				binding.arg
+				binding.modifiers
+			vNode
+			oldVnode
+		指令简写默认调用 bind 与 update 回调函数	
+	局部:
+		<div v-color="'red'">变色</div>
+		directives: {
+			color(el,binding) {
+				el.style.background = binding.value
+
+组件通信
+	props $emit
+	$attrs $listener
+	$parent $children
+	$refs
+	provide inject
+	eventbus 
+	vuex
+	this.$attrs 获取所有属性
+	this.$listeners 获取所有v-on绑定的事件
+		this.$listeners.click()
+	<button @click="emit('click')"></button>
+
+路由
+	编程式:
+		this.$router.back()	
+		this.$router.forward()	
+		this.$router.go() 指定步数	2或-2
+		this.$router.push()	
+	匹配高亮:
+		router-link-exact-active:
+			多级路由的确切匹配
+	路由钩子函数:
+		当前组件中:
+			export default {
+			  beforeRouteEnter			
+			  beforeRouteUpdate			
+			  beforeRouteLeave(to, from, next){
+			  	不执行 next 则停留在当前组件上
+		router/index.js:
+			进入前:
+				router.beforeEach((to,from,next)=>{
+					to.match[0].path: 当前路由的父路由
+					to.match[1].path: 当前路由
+				  next()
+				  next('/login')
+				})
+				router.app 指向main.js的根实例
+			进入后:
+				router.afterEach((to,from)=>{
+					window.document.title='abc'
+					此处必须要window.document 
+				})
+		具体路由配置中:
+			routes:[
+				path:'/about',
+				beforeEnter(to,from,next){}
+router-link
+	<router-link exact to="/about" event="mouseover">
+	<router-link :to="index">
+	<router-link :to="{path:'/about'}" active-class="cur-active">
+	<router-link :to="{path:'/about',query:{info:'follow'}}">	
+	携带 params 时 name 代替 path
+			<router-link :to="{name:'businessCate',query:{user:'info'},params:{id:1}}">
+		目标页面获取:
+			this.$route.params.id
+			this.$route.query.user
+
+routerv-view
+	路由配置中需要缓存的组件添加路由元信息{meta: {keepAlive: true}}
+	<keep-alive>
+		<router-view v-if="$route.meta.keepAlive"></router-view>
+	</keep-alive>
+	<router-view v-if="!$route.meta.keepAlive"></router-view>
+routerv-view
+	按照name渲染对应的router-view
+		<router-view name="version"></router-view>
+		router.js
+			{
+				path: '/test',
+				component: {
+					default: comA,
+					version: comB
+				}
+			}
+
+new Route({
+	base: '/base/',
+	linkActiveClass: 'active-link',
+	linkExactActiveClass: 'exact-active-link',
+	scrollBehavior (to, from, savePosition) {
+		if (savePosition) {
+			return savePosition
+		} else {
+			return {x: 0, y: 0}
+		}
+	},
+	fallback: true
+		不支持history模式用hash
+vue-router生命周期钩子
+	1.导航被触发
+	2.在失活的组件里调用beforeRouteLeave
+	3.调用全局的beforeEach
+	4.在重用的组件里调用beforeRouteUpdate 守卫(2.2+版本)
+		场景
+			/user?id=1 id动态改变, 复用同一组件
+			此时可监控$router的变化
+			或者利用 beforeRouteUpdate 钩子执行处理
+	5.在路由配置里调用beforeEnter
+	6.解析异步路由组件
+	7.在被激活的组件里调用beforeRouteEnter
+	8.调用全局的beforeResolve 守卫(2.5+) 路由解析完成后执行的钩子
+	9.导航被确认
+	10.调用全局的afterEach 钩子
+	11.触发DOM 更新
+	12.用创建好的实例调用beforeRouteEnter 守卫中传给next 的回调函数(组件渲染完后 会调用beforeRouteEnter 的回调方法)
+		beforeRouteEnter (to, from, next) {
+			此钩子无法获取this, 但是next的回调函数中可获取this
+			next(vm => {
+				此函数在组件渲染完成后执行, 在路由周期中最后执行
+			})
+		}
+
+Vuex
+	A模块
+		export default {
+			namespace: true,
+				开启模块作用域
+			state,
+			mutations
+		}
+		.vue文件中:
+			...mapMutations({
+				updateText: 'a/updateText'
+			})
+			this.updateText()
+	Getters:
+		getters: {
+			textPlus (state, getters, rootState) {
+				state: 当前模块state
+				getters: 所有getters方法
+				rootState: 全局state
+			}
+		}	
+	Actions:		
+		actions: {
+			add ({state, commit, rootState}) {
+				commit('updateText', rootState.count)
+					触发当前模块的mutation
+				commit('updateText', rootState.count, {root: true})
+					触发全局的mutation
+			}
+		}

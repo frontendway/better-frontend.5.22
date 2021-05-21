@@ -1,0 +1,43 @@
+原理
+  async function async1() {
+    await async2()
+    console.log('async1 end')
+  }
+  async function async2() {
+    console.log('async2 end')
+  }
+  async1()
+  第1阶段
+    async1 执行后立即执行 async2 立刻打印 'async2 end'
+    async2 返回值是个 promise
+    拿到返回值后 promise 后遇到 await 让出当前线程执行 async1 外的代码
+  第2阶段
+    同步代码执行完毕后回到 await 处执行返回的 promise 的 resolve 函数(内部调用)、拿到处理结果
+  第3阶段
+    再回到 await 的位置处理拿到的结果、把 await 后的代码包裹进 then 回调中
+  本案例改写成
+    new Promise((resolve, reject) => {
+      console.log('async2 end')
+      resolve(Promise.resolve())
+    }).then(() => {
+      console.log('async1 end')
+    })
+
+  案例
+    let a = 0
+    async function b () {
+      a = 0 + await 10
+      console.log('2', a)
+    }
+    b()
+    a++
+    console.log('1', a)
+    
+    函数 b 先执行执行到 await 10 之前变量 a 还是 0
+    await 
+      内部实现了 generator 会保留堆栈中的值、所以 a = 0 被保留
+      await 后的表达式如不返回 promise 会被 Promise.resolve 包裹
+      然后遇到 await 让出线程执行函数体外代码
+    同步代码执行完毕后执行异步代码
+    将保存下来的值拿出来使用
+    这时候 a = 0 + 10

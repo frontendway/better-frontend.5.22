@@ -1,0 +1,40 @@
+严格模式下 arguments 与形参无映射关系
+
+案例
+  var a = 4
+  function b (x, y, a) {
+    var x = 1
+    var y = 2
+    var a = 3
+    console.log(a) 
+    arguments[2] = 10 
+    console.log(a) 
+  }
+  a = b(1, 2, 3)
+  console.log(a)
+  ->
+    3 10 undefined
+案例
+  function fn (x, y) {
+    var arg = arguments
+    arg[0] = 100
+    console.log(x)
+    y = 200
+    console.log(arg[1])
+  }
+  fn(10)
+  ->
+    100 undefined
+案例
+  let n = 10, m = 20
+  ~function (n, m) {
+    let arg = arguments
+    arg[0] = n || 100
+    arg[1] = m || 200
+    console.log(n, m)
+  }(m)
+  console.log(n, m)
+  ->  
+    100 undefined
+    此处实参只传入一个 10、所以 arguments 成员只有 1 项
+    arguments 与形参映射机制建立在函数执行时期形参赋值的一瞬间

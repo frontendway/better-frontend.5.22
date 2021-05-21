@@ -1,0 +1,135 @@
+案例
+  let a = 1
+  window.a -> undefined
+案例
+  console.log(fn) -> undefined
+  if (true) function fn () {}
+案例
+  f = function () {return true}
+  g = function () {return false}
+  ~function () {
+    if (g() && [] == ![]) {
+      f = function () {return false}
+      function g () {return true}
+    }
+  }()
+  console.log(f())
+  console.log(g())
+案例
+  fn()
+  function fn () {console.log(1)}
+  fn()
+  function fn () {console.log(2)}
+  fn()
+  var fn = 100
+  fn()
+  function fn () {console.log(3)}
+  fn()
+  function fn () {console.log(4)}
+  fn()
+案例
+  let a = 1
+  console.log(a)
+  let a = 2
+  ->  Identifier 'a' has already been declared
+      let 虽然不变量提升、但是代码执行前仍然会检查变量名是否有重复
+案例
+  a = 12
+  console.log(a)
+  let a = 1
+  ->  Cannot access 'a' before initialization
+案例
+  let n = 10
+  if (!('n' in window)) {
+    let n = n + 30
+  }
+  console.log(n)
+  ->  
+    let 不会变量提升 if 语句里直接使用 n 变量则报错
+案例
+  {
+    let n = 10
+    {
+      console.log(n)
+      let n = 20
+    }
+  }
+案例
+  a = 10
+  let a = 19
+  ->  
+    代码执行之前的检测发现当前块作用域有 let n 变量、则使用当前作用域内的变量n
+    由于不会变量提升、所以提前使用此变量会报错
+案例
+  let n = 10, obj = {n: 20}
+  let fn = obj.fn = (function () {
+    this.n++
+    n++
+    return function (m) {
+      n += 10 + (++m)
+      this.n += n
+      console.log(n)
+    }
+  })(obj.n)
+  fn(10)
+  obj.fn(10)
+  console.log(n, obj.n)
+案例
+  let i = 0
+  let fn = function (n) {
+    i += 2
+    return function (m) {
+      i += (++n) + (m--)
+      console.log(i)
+    }
+  }
+  let f = fn(2)
+  f(3)
+  fn(2)(3)
+  f(4)
+  console.log(i)
+案例
+  let n = 1
+  let x = {
+    n: 2,
+    y: (function (n) {
+      n = n || 3
+      return function (m) {
+        m = m || 4
+        this.n += m++
+        n += ++m
+        console.log(n)
+      }
+    })(window.n)
+  }
+  let z = x.y
+  x.y(5)
+  z(6)
+  console.log(n, x.n)
+案例
+  let a = 0, b = 0
+  function A (a) {
+    A = function (b) {
+      alert(a + b++)
+    }
+    alert(a++)
+  }
+  A(1)
+  A(2)
+  ->
+    A = function (b) {alert(a + b++)} 由于此函数被全局的 A 变量占用、所以外层函数不销毁
+案例
+  var b = 10
+  (function b () {
+    b = 20
+    console.log(b)
+  })()
+  -> 
+    非匿名自执行函数、函数变量为只读无法修改
+案例
+  (function () {
+    var a = b = 3
+  })()
+  console.log(typeof a !== 'undefined') false
+  console.log(typeof b !== 'undefined') true
+  

@@ -1,0 +1,58 @@
+静态函数
+  String.fromCharCode
+
+原型函数
+  charAt(n)
+    返回指定索引的字符串、默认 0
+  charCodeAt(n)
+    返回指定索引字符串的 unicode 编码、默认 0
+    不在索引范围返回 NaN
+  codePointAt(n)
+    返回指定索引字符串的 unicode 编码
+    不在索引值返回 undefined
+  match(reg)
+    参数: 正则
+      未传入参数、则返回包含空字符串的数组
+      当参数是字符串或数字、它会使用 new RegExp 来隐式转换成正则
+      如果是个有正号的正数、RegExp()方法将忽略正号
+        str.match(NaN)                NaN的类型是number返回['NaN']
+        str.match('number')           'number' 是字符串返回['number']
+        str.match(Infinity)           Infinity的类型是number返回['Infinity']
+        str.match(+Infinity)          ['Infinity']
+        str.match(-Infinity)          ['-Infinity']
+        str.match(65)                 ['65']       
+        str.match(+65)                正号的number返回['65']
+        str.match(null)               ['null']
+      new RegExp({})                  /[object Object]/
+      new RegExp(function fn1 () {})  /function fn1 () {}/
+    返回值
+      匹配正确则返回数组、第一项是完整的正则匹配内容、后面依次是小分组匹配内容(无修饰符 g 情况下)
+      未匹配返回 null
+  substring
+    indexStart 等于 indexEnd、substring 返回一个空字符串
+    省略 indexEnd、substring 提取字符一直到字符串末尾
+    任一参数小于 0 或为 NaN、则被当作 0
+    任一参数大于 string.length、则被当作 string.length
+    indexStart 大于 indexEnd、则 substring 的执行效果就像两个参数调换了一样
+  slice
+    支持传入负数、indexStart 大于 indexEnd 位置不会调换
+  str.repeat
+    重复输出指定字符串
+    str.repeat(0 / '' / NaN)  ->  ''
+    str.repeat(Infinity)  ->  报错
+  str.padEnd
+  str.padStart
+    填充字符串
+    '9'.padEnd(3, '0')
+    'abc'.padEnd(10)           ->  'abc       '
+    'abc'.padEnd(10, 'foo')    ->  'abcfoofoof'
+    'abc'.padEnd(6, '123456')  ->  'abc123'
+    'abc'.padEnd(1)            ->  'abc'
+  str.endsWith
+  str.startsWith
+    判断要查询的字符串是否在此字符串结尾、可接受查询范围的索引
+    'abcdefghi'.endsWith('i') -> true
+    'abcdefghi'.endsWith('d', 4) -> true
+
+字符串最大长度
+  Math.pow(2, 53) - 1

@@ -1,0 +1,5 @@
+commonJs模块化规范
+  文件即模块
+  导入require
+  导出module.exports
+  

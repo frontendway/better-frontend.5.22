@@ -1,0 +1,15 @@
+content-security-policy
+  内容安全策略、限制资源的获取、防止 xss(跨站脚本攻击)
+  本质上就是建立白名单、开发者明确告诉浏览器哪些外部资源可以加载和执行
+  开启 csp 方式
+    通过 http 头信息的 Content-Security-Policy
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self'; object-src 'none'; style-src cdn.example.org third-party.org; child-src https:">
+  案例
+    限制只可通过 http https 获取资源、内嵌的 script 脚本不执行且报错
+      res.setHeader('Content-Security-Policy', 'default-src http: https:')
+    只可获取本站资源
+      res.setHeader('Content-Security-Policy', 'default-src \'self\'')
+    form表单提交的地址只能是本站
+      res.setHeader('Content-Security-Policy', 'default-src \'self\'; form-action \'self\'')
+  注意点
+    script-src 和 object-src 是必设的、除非设置了default-src

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style type="text/css">
+		div{width: 450px;margin: 100px auto;}
+		span{display: inline-block;padding:20px 20px;background: #319aff;color: #fff;cursor: pointer;border-radius: 4px;margin: 5px;font-size: 20px;}
+	</style>
+</head>
+<body>
+	<div id="box">
+		<span>1</span>
+		<span>2</span>
+		<span>3</span>
+		<span>4</span>
+		<span>5</span>
+		<span>6</span>
+		<span>7</span>
+		<span>8</span>
+		<span>9</span>
+		<span>10</span>
+		<span>11</span>
+	</div>
+</body>
+</html>
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$('span').on('mousedown',function(ev){
+		ev.preventDefault();
+		var _this=this;
+		var $cSpan=$(this).clone();
+		$('body').append($cSpan);
+		$cSpan.css({
+			position:'absolute',
+			left:ev.pageX-25,
+			top:ev.pageY-35
+		});
+		$(document).on('mousemove.drag',function(ev){
+			$cSpan.css({
+				position:'absolute',
+				left:ev.pageX-25,
+				top:ev.pageY-35
+			});
+		})
+
+		$(document).on('mouseup.drag',function(ev){
+			var $closeSpan=findClose({
+				x:ev.pageX,
+				y:ev.pageY
+			});
+
+			$(_this).insertBefore($closeSpan);
+			$cSpan.remove();
+
+			$(this).off('.drag');
+
+		})
+
+		function findClose(pos){
+			var arr=row(pos.y);
+			return cell(arr,pos.x);
+		}
+		/* 筛选出符合条件所在行的每个span */
+		function row(y){
+			var $aSpan=$('#box').find('span');
+			var val=9999999;
+			var minY=0;
+			var arr=[];
+			$aSpan.each(function(i,ele){
+				var num=Math.abs($(ele).offset().top + $(ele).innerHeight()/2 - y);
+				if(num < val){
+					val=num;
+					minY=$(ele).offset().top;
+				}
+			});
+			$aSpan.each(function(i,ele){
+				if($(ele).offset().top == minY){
+					arr.push(ele);
+				}
+			});
+			return arr;
+		}
+		/* 筛选出指定行里面的最近的span */
+		function cell(arr,x){
+			var min=9999999;
+			var $span=null;
+			$.each(arr,function(i,ele){
+				var num=Math.abs($(ele).offset().left + $(ele).innerWidth()/2 - x);
+				if(num < min){
+					min=num;
+					$span=ele;
+				}
+			});
+			return $span;
+		}
+
+	});
+</script>

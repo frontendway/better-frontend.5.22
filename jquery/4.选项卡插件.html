@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style type="text/css">
+		.tab div{width: 200px;height: 100px;border: 1px solid red;display: none;}
+		.tab .active{background: red;}
+	</style>
+</head>
+<body>
+	<div id="tab" class="tab">
+		<!-- <button>点击</button>
+		<button>点击</button>
+		<button>点击</button>
+		<div>内容1</div>
+		<div>内容2</div>
+		<div>内容3</div> -->
+	</div>
+</body>
+</html>
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
+	(function($){
+		var def={
+			headers:['按钮','按钮','按钮'],
+			bodys:['1111','22222','3333'],
+			event:'click'
+		};
+		var settings={};
+		var $parent=null;
+		function iTab(options){
+			settings=$.extend(settings,def,options);
+			$parent=this;
+			createHtml();
+			bindEvent();
+		}
+
+		function createHtml(){
+			$.each(settings.headers,function(i,item){
+				$btn=$('<button>'+item+'</button>');
+				if(i == 0){
+					$btn.addClass('active');
+				}
+				$parent.append($btn);
+			});
+			$.each(settings.bodys,function(i,item){
+				$div=$('<div>'+item+'</div>');
+				if(i == 0){
+					$div.show();
+				}
+				$parent.append($div);
+			});
+		}
+
+		function bindEvent(){
+			$divs=$parent.find('div');
+			$parent.find('button').on(settings.event,function(){
+				var index=$(this).index();
+
+				$(this).addClass('active').siblings().removeClass('active');
+				$divs.eq(index).show().siblings('div').hide();
+			});
+		}
+		$.fn.extend({
+			tab:iTab
+		});
+	})(jQuery);
+
+	$('#tab').tab({
+		event:'mouseenter'
+	});
+
+</script>

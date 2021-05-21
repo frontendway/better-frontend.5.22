@@ -1,0 +1,13 @@
+数字转千分符
+  var a = 123432412341234
+  a.toLocaleString() 
+    => "123,432,412,341,234"
+
+有一项不符合
+  if(!a || !b || !c) return
+
+缓存优化
+  const cached = options._Ctor || (options._Ctor = {})
+  if (cached[SuperId]) {
+    return cached[SuperId]
+  }

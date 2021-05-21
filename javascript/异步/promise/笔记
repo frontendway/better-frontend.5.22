@@ -1,0 +1,111 @@
+案例
+  setTimeout(() => {
+    console.log('timeout1')
+    Promise.resolve().then(() => {
+      console.log('then1')
+    })
+  }, 0)
+  Promise.resolve().then(() => {
+    console.log('then2')
+    setTimeout(() => {
+      console.log('timeout2')
+    }, 0)
+  })
+  取出一个宏任务放入执行环境中执行、执行环境执行完毕后、先再去清空微任务
+案例
+  let p = new Promise(function (resolve, reject) {
+    reject()
+    resolve()
+  })
+  p.then(() => {
+    console.log('成功')
+  }, () => {
+    console.log('失败')
+  })
+  =>  
+    Promise 的状态是不可逆的
+案例
+  let p = new Promise(function (resolve, reject) {
+    console.log('1')
+    reject()
+    console.log('2')
+  })
+  p.then(() => {
+    console.log('3')
+  })
+  =>  
+    then是异步执行且resolve无阻断代码能力、失败若是无错误处理函数接受则报错
+案例
+  Promise.resolve(1)
+  .then(res => 2)
+  .catch(err => 3)
+  .then(res => console.log(res))
+  =>
+    then 函数返回普通值、则此值传递给下个 then 中作为成功的结果
+案例
+  Promise.resolve(1)
+  .then(x => x + 1)
+  .then(x => {throw new Error('my error')})
+  .catch(() => 1)
+  .then(x => x + 1)
+  .then(x => console.log(x))
+  .catch(console.error)
+  =>  
+    throw new Error 会被 catch 捕捉到、catch 也是返回成功状态的 Promise
+案例
+  setTimeout(() => console.log(1), 0)
+  new Promise((resolve) => {
+    console.log(2)
+    for (var i = 0; i < 20; i++) {
+      i == 9 && resolve()
+    }
+    console.log(3)
+  }).then(() => console.log(4))
+  console.log(5)
+  =>  
+    Promise.then 中注册的方法会放到微任务队列、new Promise 中传入的函数会依据代码自上而下执行顺序执行
+案例
+  async function async1 () {
+    console.log('async1 start')
+    await async2()
+    console.log('async1 end')
+  }
+  async function async2 () {
+    console.log('async2')
+  }
+  console.log('script start')
+  setTimeout(() => {
+    console.log('timeout')
+  }, 0)
+  async1()
+  new Promise(function (resolve) {
+    console.log('promise1')
+    resolve()
+  })
+  .then(function () {
+    console.log('promise2')
+  })
+  console.log('script end')
+案例
+  let p1 = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject()
+    }, 2000)
+  })
+
+  p1.then(() =>{
+    console.log('第一步成功')
+  },() => {
+    return Promise.reject()
+  })
+  .then(() => {
+    console.log('b')
+  }, () => {
+    console.log('berr') 
+  }).then(() => {
+    console.log('c') 
+  }).then(() => {
+    console.log('d') 
+  }).catch(err => {
+    console.log('出错')
+  })

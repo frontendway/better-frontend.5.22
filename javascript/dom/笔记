@@ -1,0 +1,106 @@
+如果元素被指定的选择器字符串选中、Element.matches 返回 true、否则 false
+  属于 Element 类下方法
+  ele.matches('span/.box')
+
+节点属性
+  nodeType    nodeName            nodeValue
+  1: 元素节点  大写标签名           null
+  2: 属性节点  属性 key            属性 value
+  3: 文本节点  #text               文本内容
+  8: 注释节点  #comment            注释内容
+  9: 文档节点  #document           null
+  11: 文档碎片 #document-fragment  null
+  parentNode parentElement(IE下独有)    父节点
+  ele.childNodes                       所有子节点
+  ele.children                         所有子元素
+  previousSibling                      上个节点
+  previousElementSibling               上个元素节点
+  nextSibling                          下个节点
+  nextElementSibling                   下个元素节点
+  firstChild / firstElementChild
+  lastChild / lastElementChild
+
+动态操作
+  document.createElement
+  document.createDocumentFragment
+  document.createTextNode(value)
+  ele.appendChild
+  ele.insertBefore
+  ele.cloneNode(boolean)
+  ele.removeChild
+  set/get/removeAttribute
+  案例
+		var newli = document.createElement('li')
+		oul.appendChild(newli)
+		oul.insertBefore(newli,ul.chidren[0])
+		oul.removeChild(newli)
+		oul.replaceChild(新元素, 目标元素)
+		element.cloneNode(true)
+			默认false、不会克隆后代节点
+  表格
+    var table = document.getElementById('table')
+    table.tHead
+    table.tBodies[n]
+    table.rows == 每行 tr 也是类数组
+    rows[n].cells	 每行 tr 所有 td 也是类数组
+  select
+    select.selectedIndex
+
+client
+  clientWidth -> width + padding
+  案例
+    获取屏幕可视区宽
+    Math.max(document.documentElement.clientWidth, document.body.clientWidth)
+    window.innerHeight -> 文档可视区高
+    window.outerHeight -> 整个浏览器高度
+  clientTop
+    上边框大小
+  clientLeft
+    左边框大小
+
+offset
+  offsetParent
+		距离某元素最近的有定位元素的祖先节点
+		祖先节点无定位则指向 body
+    元素设为
+      display: none 返回 null
+      position: fixed
+        火狐下返回 body
+        其他浏览器返回 null
+  获取元素到 body 的距离
+		function getLeft (ele) {
+      let [left, parent] = [ele.offsetLeft, ele.offsetParent]
+
+      while (parent) {
+        left += parent.offsetLeft + parent.clietLeft
+        parent = parent.offsetParent
+      }
+
+      return left
+    }
+  document.body.offsetParent
+  document.head.offsetParent
+  document.documentElement.offsetParent
+    null
+  document.offsetParent
+  window.offsetParent
+    undefined
+
+scroll
+  scrollHeight -> 内容真实高度
+  滚动条相关
+		document.documentElement.scrollTop || document.body.scrollTop
+  文档实际高度
+    Math.max(document.body.scrollHeight, document.documentElement.scrollHeight)
+
+获取元素样式:
+  dom.style
+  if(window.getComputedStyle){
+    getComputedStyle(oDiv).width == '100px' (字符串类型)
+  }else{
+    oDiv.currentStyle.width == 100 (数字类型)
+  }
+
+如何减少 dom 操作
+  1. 缓存查询到的 dom 结果
+  2. 多次 dom 插入操作合并成一次

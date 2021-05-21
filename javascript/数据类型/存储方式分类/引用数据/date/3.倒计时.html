@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+	<p></p>
+<script type="text/javascript">
+
+	function countDown(target) {
+		target = new Date(target).getTime();
+		var ms = target - new Date();
+		var s = Math.floor(ms / 1000);
+		var day = Math.floor(s / 86400)
+		var hour = Math.floor(s % 86400 / 3600)
+		var min = Math.floor(s % 86400 % 3600 / 60)
+		var t = s % 60
+		return day+'天'+hour+'时'+min+'分'+t+'秒';
+	}
+</script>
+</body>
+</html>

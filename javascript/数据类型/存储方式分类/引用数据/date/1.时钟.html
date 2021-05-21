@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+
+<body>
+	<p></p>
+</body>
+<script type="text/javascript">
+	var zm = {};
+
+	/* 显示年月日时分秒 */
+	zm.showDetail = function () {
+		var oDate = new Date();
+		var year = oDate.getFullYear();
+		var month = oDate.getMonth() + 1;
+		var odate = oDate.getDate();
+		var hour = oDate.getHours();
+		var min = oDate.getMinutes();
+		var sec = oDate.getSeconds();
+		this.oP.innerText = year + '年' + month + '月' + odate + '日' + hour + ':' + min + ':' + sec;
+	}
+
+	zm.init = function () {
+		this.oP = document.getElementsByTagName('p')[0];
+		this.oDate = new Date();
+		this.loop();
+	}
+	/* 定时刷新时间 */
+	zm.loop = function () {
+		var This = this;
+		clearInterval(this.timer);
+		This.timer = setInterval(function () {
+			This.showDetail.call(This);
+		}, 1000);
+	}
+
+	zm.init();
+
+</script>
+
+</html>

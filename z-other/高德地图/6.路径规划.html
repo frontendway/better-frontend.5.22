@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style type="text/css">
+		html,body,div{
+			height: 100%;
+		}
+	</style>
+</head>
+<body>
+	<div id="container"></div>
+	<div class="mask"></div>
+	<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.6&key=edbfd1707204008b631b9cf3afae61a7"></script>
+	<script type="text/javascript">
+		var map = new AMap.Map("container", {
+			resizeEnable: true,
+			center: [116.397933,39.844818],//地图中心点
+			zoom: 15 //地图显示的缩放级别
+	  });
+
+		AMap.service('AMap.Riding',function(){//回调函数
+	    //实例化Transfer 使用transfer对象调用公交换乘相关的功能
+	    /*var riding = new AMap.Riding({
+        map: map,
+      }); */
+
+	    var riding = new AMap.Riding(); 
+      //根据起终点坐标规划骑行路线
+      riding.search([116.397933,39.844818],[116.440655,39.878694],function(status,data) {
+      	var rides=data.routes[0].rides;
+      	var arr=[];
+      	for(var i=0;i<rides.length;i++) {
+      		var cur=rides[i];
+      		arr.push(cur.start_location);
+      		if(i == arr.length-1) {
+      			arr.push(cur.end_location)
+      		}
+      	}
+      	editLine(arr);
+      });
+		});
+
+		function editLine(arr){
+	    //定义折线对象
+	    var polyline=new AMap.Polyline({
+        path:arr,     //设置折线的节点数组
+        strokeColor:"#529a4e",
+        strokeOpacity:1,
+        strokeWeight:5,
+        strokeStyle:"solid",
+        strokeDasharray:[10,5]
+	    }); 
+	    polyline.setMap(map);//地图上添加折线 
+	    //构造折线编辑对象，并开启折线的编辑状态
+	    /*map.plugin(["AMap.PolyEditor"],function(){
+        polylineEditor = new AMap.PolyEditor(map,polyline); 
+        polylineEditor.open(); 
+	    }); */                                 
+		}
+
+		var mk=new AMap.Marker({
+			position: [116.397933,39.844818],
+			map: map
+		});
+		
+		var mk=new AMap.Marker({
+			position: [116.397933,39.844818],
+			map: map,
+			icon: './a.png'
+		});
+
+	</script>
+</body>
+</html>

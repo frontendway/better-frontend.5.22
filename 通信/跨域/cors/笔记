@@ -1,0 +1,42 @@
+cors
+  跨域资源共享
+  允许浏览器向跨源服务器发送 XMLHttpRequest 请求、从而突破 ajax 只能同源使用的限制
+
+node 中开启 cors
+  node 默认只识别 get post 请求
+
+  res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:3000,http://127.0.0.1:3001')
+  res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,DELETE,OPTIONS')
+
+  设置 options 请求间隔时间、10s内不再重复发送 options 请求
+    res.setHeader('Access-Control-Max-Age', 10)
+
+  允许客户端请求头携带 Content-Type、token 请求头
+    res.setHeader('Access-Control-Allow-Headers','Content-Type,token')
+
+  允许客户端携带 cookie 提交
+    res.setHeader('Access-Control-Allow-Credentials', true)
+    跨域默认不会携带 cookie、withCredentials 强制携带 cookie、此时服务的允许访问的源不能是'*'
+      Axios.post(url, qs.stringify(obj), {withCredentials: true})
+
+  客户端可获取到安全的响应头信息
+    res.setHeader('Access-Control-Expose-Headers', 'name')
+
+cors 跨域请求限制
+  允许的方法
+    get post head
+  允许的Content-Type
+    text/plain
+    multipart/form-data
+    application/x-www-form-urlencoded
+  允许的头信息
+    Accept
+    Accept-Language
+      表示浏览器所支持的语言类型
+    Content-Type
+    Content-Language
+      用来说明访问者希望采用的语言
+  除上以外都会先发送 options 请求
+
+options
+  浏览器先询问服务器当前域是否可以请求此服务器、以及可以使用哪些 http 命令和头信息

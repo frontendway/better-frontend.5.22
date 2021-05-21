@@ -1,0 +1,29 @@
+静态属性
+  Number.EPSILON
+    表示 1 与大于 1 的最小浮点数之间的差、js 能够表示的最小精度
+    误差如果小于这个值则可认为不存在误差
+      Math.abs(0.1 + 0.2 - 0.3) <= Number.EPSILON
+    设置误差范围
+      Number.EPSILON * Math.pow(2, 2) 为 2 的 -50 次方
+静态方法
+  Number.parseFloat
+  Number.parseInt(num, radix)
+    二进制转十进制
+    radix 为可选默认 10、传入 0 视为 10、[2 ~ 36] 之间、超出返回 NaN
+    案例
+      parseInt('hello', 2) -> NaN
+      parseInt('3', 2) -> NaN, 3 不是合法的二进制数字
+      parseInt('3', 100) -> NaN
+      ['1', '2', '3'].map(parseInt) -> [1, NaN, NaN]
+
+原型函数
+  toFixed
+    值四舍五入、没有小数会补 0、返回值是 string
+
+为什么 0.1 + 0.2 != 0.3？
+  0.1、0.2 转为二进制的时候是无限循环的小数
+  但 js 采用的是 IEEE 754 双精度版本的浮点数标准、会裁剪掉一部分数字导致精度丢失
+  解决方案 parseFloat((0.1 + 0.2).toFixed(10))
+
+丢失精度
+  整数超过 Math.pow(2, 53) 会丢失精度、进位除外

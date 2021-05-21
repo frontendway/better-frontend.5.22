@@ -1,0 +1,18 @@
+设置cookie
+  document.cookie = 'username=leo;expires=' + oDate.toGMTString()
+
+获取 cookie 值
+  var str = "username=leo; age=20; sex=man"
+  function getVal(key,str){
+    var arr1=str.split('; ')
+    for(var i=0;i<arr1.length;i++){
+      var arr2=arr1[i].split('=')
+      if(arr2[0] == key){
+        return arr2[1]
+      }
+    }
+  }
+  read (name: string) {
+    const match = document.cookie.match(new RegExp(`(^|;\\s*)(${name})=([^;]*)`))
+    return match ? decodeURIComponent(match[3]) : null
+  }

@@ -1,0 +1,5 @@
+提取css
+压缩css
+contenthash
+manifest
+自动引入模块

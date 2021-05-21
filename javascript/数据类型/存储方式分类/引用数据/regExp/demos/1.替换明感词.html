@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+	
+</body>
+</html>
+<script type="text/javascript">
+	var str='我没有无我没有无我没有无我没有无';
+
+	var reg=/没有|我/g;
+	var news=str.replace(reg,function(s){
+		var str='';
+		for(var i=0;i<s.length;i++){
+			str+='*';
+		}
+		return str;
+	});
+
+	console.log(news)
+
+/*
+	str.replace(reg,function($0,$1,$2){
+		$0: 整个正则
+		$1: 第1个子项()	
+	});
+*/
+		
+
+
+</script>

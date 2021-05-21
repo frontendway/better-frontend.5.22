@@ -1,0 +1,7 @@
+btoa
+  字符串转 base64
+encodeURI/decodeURI
+  不会对本身属于 URI 的特殊字符进行编码、如冒号、正斜杠、问号、井号、空格
+encodeURIComponent/decodeURIComponent
+  编码所有非字母数字字符
+  使用场景居多、大部分都是对查询字符串进行编码

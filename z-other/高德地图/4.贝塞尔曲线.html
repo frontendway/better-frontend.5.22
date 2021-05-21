@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style type="text/css">
+		html,body,div{height: 100%;}
+		body{margin: 0px;}
+		.active{width: 30px;height: 30px;border-radius: 50%;text-align: center;line-height: 30px;background: #45953e;color: #fff;}
+	</style>
+</head>
+<body>
+	<div id="map-wrap"></div>
+	<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.6&key=edbfd1707204008b631b9cf3afae61a7"></script>
+	<script type="text/javascript">
+		var lineEditor,map=new AMap.Map('map-wrap');
+	  var lineArr = [
+	    [116.39, 39.91, 116.37, 39.91],//起点
+	   	//第一段弧线
+		  [116.380298, 39.907771, 116.38, 39.90],//控制点，途经点
+	  ];
+
+	  var curve= new AMap.BezierCurve({
+			map: map,
+			path: lineArr,
+			strokeColor: "#449b3d", //线颜色
+			strokeOpacity: 1, //线透明度
+			strokeWeight: 3, //线宽
+			strokeStyle: "solid" //线样式
+		});
+
+		map.setFitView();
+
+		var mk1=new AMap.Marker({
+			map: map,
+			position: [116.38, 39.90],
+			content: '<div class="active">起</div>',
+			offset: new AMap.Pixel(-10,-20)
+		});
+
+		var mk2=new AMap.Marker({
+			map: map,
+			position: [116.37, 39.91],
+			content: '<div class="active">送</div>',
+			offset: new AMap.Pixel(-10,-20)
+		});
+		
+	</script>
+</body>
+</html>
